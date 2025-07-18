@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download - Your App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+
+    .container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 3rem;
+        text-align: center;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        max-width: 500px;
+        width: 90%;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+
+    .subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-bottom: 2rem;
+    }
+
+    .download-section {
+        margin-bottom: 2rem;
+    }
+
+    .download-btn {
+        background: linear-gradient(45deg, #00c6ff, #0072ff);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        box-shadow: 0 4px 15px rgba(0, 114, 255, 0.3);
+    }
+
+    .download-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 114, 255, 0.4);
+    }
+
+    .download-btn:active {
+        transform: translateY(0);
+    }
+
+    .mobile-message {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .mobile-message h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #ffd700;
+    }
+
+    .mobile-message p {
+        opacity: 0.9;
+        line-height: 1.6;
+    }
+
+    .os-info {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 2rem;
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+
+    .other-downloads {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .other-downloads h3 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+    }
+
+    .download-links {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .download-link {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .download-link:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-1px);
+    }
+
+    .toggle-btn {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        margin-bottom: 1rem;
+    }
+
+    .toggle-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    @media (max-width: 480px) {
+        .container {
+            padding: 2rem 1.5rem;
+        }
+        
+        h1 {
+            font-size: 2rem;
+        }
+        
+        .download-links {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="container">
+        <h1>Download Your App</h1>
+        <p class="subtitle">Get the latest version for your device</p>
+
+```
+    <div class="os-info" id="osInfo"></div>
+    
+    <div class="download-section" id="downloadSection">
+        <!-- Dynamic content will be inserted here -->
+    </div>
+    
+    <div class="other-downloads">
+        <button class="toggle-btn" id="toggleBtn" onclick="toggleOtherDownloads()">
+            Show Other Downloads
+        </button>
+        <div id="otherDownloads" class="hidden">
+            <h3>All Download Options</h3>
+            <div class="download-links">
+                <a href="#" class="download-link" onclick="downloadFile('windows')">Windows (x64)</a>
+                <a href="#" class="download-link" onclick="downloadFile('mac-intel')">Mac (Intel)</a>
+                <a href="#" class="download-link" onclick="downloadFile('mac-silicon')">Mac (Apple Silicon)</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // OS Detection
+    function detectOS() {
+        const userAgent = navigator.userAgent;
+        const platform = navigator.platform;
+        
+        // Mobile detection
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)) {
+            return 'mobile';
+        }
+        
+        // Windows detection
+        if (platform.indexOf('Win') !== -1) {
+            return 'windows';
+        }
+        
+        // Mac detection with Apple Silicon check
+        if (platform.indexOf('Mac') !== -1) {
+            // Try to detect Apple Silicon
+            // This is a bit tricky, but we can use some heuristics
+            const hasAppleSilicon = /Mac.*ARM|Mac.*Apple/i.test(userAgent) || 
+                                   navigator.maxTouchPoints > 1 ||
+                                   screen.width === 1440 && screen.height === 900; // Common M1 MacBook resolution
+            
+            return hasAppleSilicon ? 'mac-silicon' : 'mac-intel';
+        }
+        
+
+        
+        return 'unknown';
+    }
+
+    // Download function
+    function downloadFile(osType) {
+        const downloads = {
+            'windows': 'https://example.com/download/windows/app-setup.exe',
+            'mac-intel': 'https://example.com/download/mac-intel/app-intel.dmg',
+            'mac-silicon': 'https://example.com/download/mac-silicon/app-silicon.dmg',
+
+        };
+        
+        // In a real implementation, you would use actual download URLs
+        alert(`Downloading for ${osType}...\nURL: ${downloads[osType]}`);
+        
+        // For demo purposes, we'll just show an alert
+        // In production, you would do:
+        // window.location.href = downloads[osType];
+    }
+
+    // Toggle other downloads visibility
+    function toggleOtherDownloads() {
+        const otherDownloads = document.getElementById('otherDownloads');
+        const toggleBtn = document.getElementById('toggleBtn');
+        
+        if (otherDownloads.classList.contains('hidden')) {
+            otherDownloads.classList.remove('hidden');
+            toggleBtn.textContent = 'Hide Other Downloads';
+        } else {
+            otherDownloads.classList.add('hidden');
+            toggleBtn.textContent = 'Show Other Downloads';
+        }
+    }
+
+    // Initialize page
+    function initializePage() {
+        const os = detectOS();
+        const osInfo = document.getElementById('osInfo');
+        const downloadSection = document.getElementById('downloadSection');
+        
+        // Display OS info
+        const osNames = {
+            'windows': 'Windows',
+            'mac-intel': 'macOS (Intel)',
+            'mac-silicon': 'macOS (Apple Silicon)',
+
+            'mobile': 'Mobile Device',
+            'unknown': 'Unknown OS'
+        };
+        
+        osInfo.textContent = `Detected: ${osNames[os]}`;
+        
+        // Create appropriate download section
+        if (os === 'mobile') {
+            downloadSection.innerHTML = `
+                <div class="mobile-message">
+                    <h2>📱 Mobile Device Detected</h2>
+                    <p>Please visit this page on a computer to download the desktop application.</p>
+                </div>
+            `;
+        } else if (os === 'windows') {
+            downloadSection.innerHTML = `
+                <button class="download-btn" onclick="downloadFile('windows')">
+                    🪟 Download for Windows
+                </button>
+            `;
+        } else if (os === 'mac-intel') {
+            downloadSection.innerHTML = `
+                <button class="download-btn" onclick="downloadFile('mac-intel')">
+                    🍎 Download for Mac (Intel)
+                </button>
+            `;
+        } else if (os === 'mac-silicon') {
+            downloadSection.innerHTML = `
+                <button class="download-btn" onclick="downloadFile('mac-silicon')">
+                    🍎 Download for Mac (Apple Silicon)
+                </button>
+            `;
+
+        } else {
+            downloadSection.innerHTML = `
+                <div class="mobile-message">
+                    <h2>❓ Unknown Operating System</h2>
+                    <p>We couldn't detect your operating system. Please select from the options below.</p>
+                </div>
+            `;
+        }
+    }
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', initializePage);
+</script>
+```
+
+</body>
+</html>
