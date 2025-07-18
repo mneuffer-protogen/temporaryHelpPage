@@ -291,7 +291,6 @@
                 <a href="#" class="download-link" onclick="downloadFile('windows')">Windows (x64)</a>
                 <a href="#" class="download-link" onclick="downloadFile('mac-intel')">Mac (Intel)</a>
                 <a href="#" class="download-link" onclick="downloadFile('mac-silicon')">Mac (Apple Silicon)</a>
-
             </div>
         </div>
     </div>
@@ -324,26 +323,24 @@
             return hasAppleSilicon ? 'mac-silicon' : 'mac-intel';
         }
         
-
-        
         return 'unknown';
     }
 
     // Download function
     function downloadFile(osType) {
         const downloads = {
-            'windows': 'https://example.com/download/windows/app-setup.exe',
+            'windows': 'https://github.com/protogen-org/ESAMTAC-VR/releases/download/Demo/ESAMTAC_Desktop.zip',
             'mac-intel': 'https://example.com/download/mac-intel/app-intel.dmg',
             'mac-silicon': 'https://example.com/download/mac-silicon/app-silicon.dmg',
-
         };
         
-        // In a real implementation, you would use actual download URLs
-        alert(`Downloading for ${osType}...\nURL: ${downloads[osType]}`);
-        
-        // For demo purposes, we'll just show an alert
-        // In production, you would do:
-        // window.location.href = downloads[osType];
+        // For Windows, directly open the GitHub release link
+        if (osType === 'windows') {
+            window.open(downloads[osType], '_blank');
+        } else {
+            // For other platforms, show placeholder message
+            alert(`Download for ${osType} coming soon!\nURL: ${downloads[osType]}`);
+        }
     }
 
     // Toggle other downloads visibility
@@ -371,7 +368,6 @@
             'windows': 'Windows',
             'mac-intel': 'macOS (Intel)',
             'mac-silicon': 'macOS (Apple Silicon)',
-
             'mobile': 'Mobile Device',
             'unknown': 'Unknown OS'
         };
@@ -404,7 +400,6 @@
                     🍎 Download for Mac (Apple Silicon)
                 </button>
             `;
-
         } else {
             downloadSection.innerHTML = `
                 <div class="mobile-message">
