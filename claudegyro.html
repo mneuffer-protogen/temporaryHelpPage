@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download - Your App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', sans-serif;
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
+        min-height: 200vh; /* Extended height for scrolling */
+        color: white;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    body::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+            radial-gradient(circle at 20% 30%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 40% 80%, rgba(30, 144, 255, 0.08) 0%, transparent 50%);
+        z-index: 0;
+    }
+
+    /* Glass Bubble */
+    .glass-bubble {
+        position: fixed;
+        width: 120px;
+        height: 120px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(20px) saturate(180%);
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.3),
+            inset 0 1px 1px rgba(255, 255, 255, 0.3),
+            0 0 0 1px rgba(255, 255, 255, 0.1);
+        z-index: 1000;
+        pointer-events: none;
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        transform-origin: center;
+    }
+
+    .glass-bubble::before {
+        content: '';
+        position: absolute;
+        top: 15%;
+        left: 25%;
+        width: 30%;
+        height: 30%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+        border-radius: 50%;
+        filter: blur(3px);
+    }
+
+    .glass-bubble::after {
+        content: '';
+        position: absolute;
+        inset: 2px;
+        background: 
+            radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 70% 70%, rgba(120, 119, 198, 0.1) 0%, transparent 50%);
+        border-radius: 50%;
+        filter: blur(1px);
+    }
+
+    .glass-bubble.active {
+        width: 180px;
+        height: 180px;
+        background: rgba(255, 255, 255, 0.12);
+        box-shadow: 
+            0 16px 64px rgba(0, 0, 0, 0.4),
+            inset 0 2px 4px rgba(255, 255, 255, 0.4),
+            0 0 0 2px rgba(255, 255, 255, 0.15);
+    }
+
+    .glass-bubble.squash-horizontal {
+        transform: scaleX(1.3) scaleY(0.7);
+    }
+
+    .glass-bubble.squash-vertical {
+        transform: scaleX(0.7) scaleY(1.3);
+    }
+
+    .main-content {
+        position: relative;
+        z-index: 2;
+        padding: 2rem 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4rem;
+    }
+
+    .container {
+        background: rgba(255, 255, 255, 0.02);
+        backdrop-filter: blur(40px) saturate(180%);
+        border-radius: 24px;
+        padding: 4rem;
+        text-align: center;
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.3),
+            0 1px 1px rgba(255, 255, 255, 0.1),
+            inset 0 1px 1px rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+    }
+
+    .container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
+        border-radius: 24px;
+        z-index: -1;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-bottom: 2rem;
+    }
+
+    .download-section {
+        margin-bottom: 2rem;
+    }
+
+    .download-btn {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+        backdrop-filter: blur(20px) saturate(180%);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 1.25rem 2.5rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-decoration: none;
+        display: inline-block;
+        box-shadow: 
+            0 4px 20px rgba(0, 0, 0, 0.1),
+            0 1px 1px rgba(255, 255, 255, 0.1),
+            inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .download-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+        border-radius: 50px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: -1;
+    }
+
+    .download-btn:hover::before {
+        opacity: 1;
+    }
+
+    .download-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 
+            0 8px 30px rgba(0, 0, 0, 0.2),
+            0 2px 4px rgba(255, 255, 255, 0.1),
+            inset 0 1px 1px rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .download-btn:active {
+        transform: translateY(0);
+    }
+
+    .mobile-message {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px) saturate(180%);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 
+            0 4px 20px rgba(0, 0, 0, 0.1),
+            inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    }
+
+    .mobile-message h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 600;
+    }
+
+    .mobile-message p {
+        opacity: 0.9;
+        line-height: 1.6;
+    }
+
+    .os-info {
+        background: rgba(255, 255, 255, 0.02);
+        backdrop-filter: blur(20px) saturate(180%);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 2rem;
+        font-size: 0.9rem;
+        opacity: 0.8;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    }
+
+    .other-downloads {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .other-downloads h3 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        opacity: 0.9;
+        font-weight: 600;
+    }
+
+    .download-links {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .download-link {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px) saturate(180%);
+        color: white;
+        text-decoration: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 30px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 
+            0 2px 8px rgba(0, 0, 0, 0.1),
+            inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    }
+
+    .download-link:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-1px);
+        box-shadow: 
+            0 4px 12px rgba(0, 0, 0, 0.15),
+            inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .toggle-btn {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px) saturate(180%);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        margin-bottom: 1rem;
+        box-shadow: 
+            0 2px 8px rgba(0, 0, 0, 0.1),
+            inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    }
+
+    .toggle-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.2);
+        box-shadow: 
+            0 4px 12px rgba(0, 0, 0, 0.15),
+            inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    /* Additional content for scrolling */
+    .extra-content {
+        background: rgba(255, 255, 255, 0.02);
+        backdrop-filter: blur(40px) saturate(180%);
+        border-radius: 24px;
+        padding: 3rem;
+        max-width: 600px;
+        width: 90%;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.3),
+            inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    }
+
+    .extra-content h2 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 600;
+    }
+
+    .extra-content p {
+        opacity: 0.9;
+        line-height: 1.8;
+        margin-bottom: 1.5rem;
+    }
+
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    .feature-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px) saturate(180%);
+        border-radius: 16px;
+        padding: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .feature-card h3 {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+        color: #ffffff;
+        font-weight: 600;
+    }
+
+    .feature-card p {
+        opacity: 0.8;
+        line-height: 1.6;
+    }
+
+    @media (max-width: 480px) {
+        .container, .extra-content {
+            padding: 2rem 1.5rem;
+        }
+        
+        h1 {
+            font-size: 2rem;
+        }
+        
+        .download-links {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .glass-bubble {
+            width: 80px;
+            height: 80px;
+        }
+
+        .glass-bubble.active {
+            width: 120px;
+            height: 120px;
+        }
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="glass-bubble" id="glassBubble"></div>
+
+```
+<div class="main-content">
+    <div class="container">
+        <h1>Download Your App</h1>
+        <p class="subtitle">Get the latest version for your device</p>
+
+        <div class="os-info" id="osInfo"></div>
+        
+        <div class="download-section" id="downloadSection">
+            <!-- Dynamic content will be inserted here -->
+        </div>
+        
+        <div class="other-downloads">
+            <button class="toggle-btn" id="toggleBtn" onclick="toggleOtherDownloads()">
+                Show Other Downloads
+            </button>
+            <div id="otherDownloads" class="hidden">
+                <h3>All Download Options</h3>
+                <div class="download-links">
+                    <a href="#" class="download-link" onclick="downloadFile('windows')">Windows (x64)</a>
+                    <a href="#" class="download-link" onclick="downloadFile('mac-intel')">Mac (Intel)</a>
+                    <a href="#" class="download-link" onclick="downloadFile('mac-silicon')">Mac (Apple Silicon)</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="extra-content">
+        <h2>✨ Why Choose Our App?</h2>
+        <p>Experience the next generation of productivity with our cutting-edge application. Designed with modern users in mind, our app delivers unparalleled performance and intuitive design.</p>
+        <p>Join millions of satisfied users who have transformed their workflow with our innovative solution. From seamless integration to advanced features, we've got everything you need.</p>
+        
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>⚡ Lightning Fast</h3>
+                <p>Optimized for speed and efficiency, our app launches instantly and handles even the most demanding tasks with ease.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🔒 Secure & Private</h3>
+                <p>Your data is protected with enterprise-grade encryption and privacy-first design principles.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🎨 Beautiful Design</h3>
+                <p>Crafted with attention to detail, featuring an intuitive interface that adapts to your workflow.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🔄 Cross-Platform</h3>
+                <p>Seamlessly sync your work across all your devices with our universal cloud integration.</p>
+            </div>
+            <div class="feature-card">
+                <h3>📱 Motion Responsive</h3>
+                <p>On mobile devices, our interface responds to your device's orientation and movement for an immersive experience.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🌟 Interactive Elements</h3>
+                <p>Discover hidden interactions and animations that make every interaction feel magical and responsive.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Glass bubble animation system
+    class GlassBubble {
+        constructor() {
+            this.bubble = document.getElementById('glassBubble');
+            this.currentX = window.innerWidth / 2;
+            this.currentY = window.innerHeight / 2;
+            this.targetX = this.currentX;
+            this.targetY = this.currentY;
+            this.velocityX = 0;
+            this.velocityY = 0;
+            this.isActive = false;
+            this.lastScrollY = window.scrollY;
+            this.lastMouseMoveTime = 0;
+            
+            // Device motion/orientation properties
+            this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            this.isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            this.gyroSupported = false;
+            this.accelerometerSupported = false;
+            this.baseGamma = 0;
+            this.baseBeta = 0;
+            this.gyroSensitivity = 3;
+            this.accelerometerSensitivity = 20;
+            this.gyroPermissionGranted = false;
+            
+            this.initializeBubble();
+            this.bindEvents();
+            this.requestDeviceMotionPermission();
+            this.animate();
+        }
+        
+        async requestDeviceMotionPermission() {
+            if (!this.isIOS) return;
+            
+            try {
+                // For iOS 13+ we need to request permission
+                if (typeof DeviceMotionEvent.requestPermission === 'function') {
+                    const permission = await DeviceMotionEvent.requestPermission();
+                    this.gyroPermissionGranted = permission === 'granted';
+                } else {
+                    // For older iOS versions, assume permission is granted
+                    this.gyroPermissionGranted = true;
+                }
+                
+                if (this.gyroPermissionGranted) {
+                    this.setupDeviceMotion();
+                }
+            } catch (error) {
+                console.log('Device motion permission request failed:', error);
+            }
+        }
+        
+        setupDeviceMotion() {
+            // Device orientation (gyroscope)
+            window.addEventListener('deviceorientation', (e) => {
+                if (!this.gyroSupported) {
+                    this.gyroSupported = true;
+                    this.baseGamma = e.gamma || 0;
+                    this.baseBeta = e.beta || 0;
+                }
+                
+                const gamma = (e.gamma || 0) - this.baseGamma; // Left-right tilt
+                const beta = (e.beta || 0) - this.baseBeta;   // Front-back tilt
+                
+                // Convert orientation to screen coordinates
+                const targetX = (window.innerWidth / 2) + (gamma * this.gyroSensitivity);
+                const targetY = (window.innerHeight / 2) + (beta * this.gyroSensitivity);
+                
+                this.targetX = Math.max(0, Math.min(window.innerWidth - 120, targetX));
+                this.targetY = Math.max(0, Math.min(window.innerHeight - 120, targetY));
+                
+                this.setActive(true);
+                this.scheduleInactive();
+            });
+            
+            // Device motion (accelerometer)
+            window.addEventListener('devicemotion', (e) => {
+                if (!this.accelerometerSupported) {
+                    this.accelerometerSupported = true;
+                }
+                
+                const acceleration = e.accelerationIncludingGravity;
+                if (acceleration && (acceleration.x || acceleration.y)) {
+                    // Add some shake-based movement
+                    const shakeX = (acceleration.x || 0) * this.accelerometerSensitivity;
+                    const shakeY = (acceleration.y || 0) * this.accelerometerSensitivity;
+                    
+                    this.velocityX += shakeX * 0.1;
+                    this.velocityY += shakeY * 0.1;
+                    
+                    // Detect significant movement
+                    if (Math.abs(acceleration.x) > 2 || Math.abs(acceleration.y) > 2) {
+                        this.setActive(true);
+                        this.scheduleInactive();
+                    }
+                }
+            });
+        }
+        
+        scheduleInactive() {
+            clearTimeout(this.inactiveTimeout);
+            this.inactiveTimeout = setTimeout(() => {
+                this.setActive(false);
+            }, 1500);
+        }
+            this.bubble.style.left = this.currentX + 'px';
+            this.bubble.style.top = this.currentY + 'px';
+        }
+        
+        bindEvents() {
+            let mouseMoveTimeout;
+            
+            // Mouse events (for desktop)
+            if (!this.isMobile) {
+                document.addEventListener('mousemove', (e) => {
+                    this.targetX = e.clientX - 60; // Offset for bubble center
+                    this.targetY = e.clientY - 60;
+                    this.lastMouseMoveTime = Date.now();
+                    
+                    this.setActive(true);
+                    
+                    clearTimeout(mouseMoveTimeout);
+                    mouseMoveTimeout = setTimeout(() => {
+                        this.setActive(false);
+                    }, 1000);
+                });
+            }
+            
+            // Touch events (for mobile devices without gyro)
+            if (this.isMobile) {
+                document.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    this.targetX = touch.clientX - 60;
+                    this.targetY = touch.clientY - 60;
+                    
+                    this.setActive(true);
+                    this.scheduleInactive();
+                }, { passive: false });
+                
+                document.addEventListener('touchstart', (e) => {
+                    this.setActive(true);
+                });
+                
+                document.addEventListener('touchend', () => {
+                    this.scheduleInactive();
+                });
+            }
+            
+            window.addEventListener('scroll', () => {
+                const scrollDelta = window.scrollY - this.lastScrollY;
+                this.lastScrollY = window.scrollY;
+                
+                // Add some vertical movement based on scroll
+                this.velocityY += scrollDelta * 0.1;
+                this.setActive(true);
+                
+                setTimeout(() => {
+                    if (Date.now() - this.lastMouseMoveTime > 500) {
+                        this.setActive(false);
+                    }
+                }, 800);
+            });
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                if (this.targetX > window.innerWidth - 120) {
+                    this.targetX = window.innerWidth - 120;
+                }
+                if (this.targetY > window.innerHeight - 120) {
+                    this.targetY = window.innerHeight - 120;
+                }
+            });
+        }
+        
+        setActive(active) {
+            if (this.isActive !== active) {
+                this.isActive = active;
+                this.bubble.classList.toggle('active', active);
+            }
+        }
+        
+        animate() {
+            // Calculate movement
+            const deltaX = this.targetX - this.currentX;
+            const deltaY = this.targetY - this.currentY;
+            
+            // Add velocity with easing
+            this.velocityX += deltaX * 0.1;
+            this.velocityY += deltaY * 0.1;
+            
+            // Apply friction
+            this.velocityX *= 0.8;
+            this.velocityY *= 0.8;
+            
+            // Update position
+            this.currentX += this.velocityX;
+            this.currentY += this.velocityY;
+            
+            // Boundary checks
+            this.currentX = Math.max(0, Math.min(window.innerWidth - 120, this.currentX));
+            this.currentY = Math.max(0, Math.min(window.innerHeight - 120, this.currentY));
+            
+            // Apply squash and stretch based on velocity
+            const speed = Math.sqrt(this.velocityX * this.velocityX + this.velocityY * this.velocityY);
+            this.bubble.classList.remove('squash-horizontal', 'squash-vertical');
+            
+            if (speed > 3) {
+                if (Math.abs(this.velocityX) > Math.abs(this.velocityY)) {
+                    this.bubble.classList.add('squash-horizontal');
+                } else {
+                    this.bubble.classList.add('squash-vertical');
+                }
+            }
+            
+            // Update bubble position
+            this.bubble.style.left = this.currentX + 'px';
+            this.bubble.style.top = this.currentY + 'px';
+            
+            requestAnimationFrame(() => this.animate());
+        }
+    }
+    
+    // Original OS detection and download functions
+    function detectOS() {
+        const userAgent = navigator.userAgent;
+        const platform = navigator.platform;
+        
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)) {
+            return 'mobile';
+        }
+        
+        if (platform.indexOf('Win') !== -1) {
+            return 'windows';
+        }
+        
+        if (platform.indexOf('Mac') !== -1) {
+            const hasAppleSilicon = /Mac.*ARM|Mac.*Apple/i.test(userAgent) || 
+                                   navigator.maxTouchPoints > 1 ||
+                                   screen.width === 1440 && screen.height === 900;
+            
+            return hasAppleSilicon ? 'mac-silicon' : 'mac-intel';
+        }
+        
+        return 'unknown';
+    }
+
+    function downloadFile(osType) {
+        const downloads = {
+            'windows': 'https://example.com/download/windows/app-setup.exe',
+            'mac-intel': 'https://example.com/download/mac-intel/app-intel.dmg',
+            'mac-silicon': 'https://example.com/download/mac-silicon/app-silicon.dmg',
+        };
+        
+        alert(`Downloading for ${osType}...\nURL: ${downloads[osType]}`);
+    }
+
+    function toggleOtherDownloads() {
+        const otherDownloads = document.getElementById('otherDownloads');
+        const toggleBtn = document.getElementById('toggleBtn');
+        
+        if (otherDownloads.classList.contains('hidden')) {
+            otherDownloads.classList.remove('hidden');
+            toggleBtn.textContent = 'Hide Other Downloads';
+        } else {
+            otherDownloads.classList.add('hidden');
+            toggleBtn.textContent = 'Show Other Downloads';
+        }
+    }
+
+    function initializePage() {
+        const os = detectOS();
+        const osInfo = document.getElementById('osInfo');
+        const downloadSection = document.getElementById('downloadSection');
+        
+        const osNames = {
+            'windows': 'Windows',
+            'mac-intel': 'macOS (Intel)',
+            'mac-silicon': 'macOS (Apple Silicon)',
+            'mobile': 'Mobile Device',
+            'unknown': 'Unknown OS'
+        };
+        
+        osInfo.textContent = `Detected: ${osNames[os]}`;
+        
+        if (os === 'mobile') {
+            downloadSection.innerHTML = `
+                <div class="mobile-message">
+                    <h2>📱 Mobile Device Detected</h2>
+                    <p>Please visit this page on a computer to download the desktop application.</p>
+                </div>
+            `;
+        } else if (os === 'windows') {
+            downloadSection.innerHTML = `
+                <button class="download-btn" onclick="downloadFile('windows')">
+                    🪟 Download for Windows
+                </button>
+            `;
+        } else if (os === 'mac-intel') {
+            downloadSection.innerHTML = `
+                <button class="download-btn" onclick="downloadFile('mac-intel')">
+                    🍎 Download for Mac (Intel)
+                </button>
+            `;
+        } else if (os === 'mac-silicon') {
+            downloadSection.innerHTML = `
+                <button class="download-btn" onclick="downloadFile('mac-silicon')">
+                    🍎 Download for Mac (Apple Silicon)
+                </button>
+            `;
+        } else {
+            downloadSection.innerHTML = `
+                <div class="mobile-message">
+                    <h2>❓ Unknown Operating System</h2>
+                    <p>We couldn't detect your operating system. Please select from the options below.</p>
+                </div>
+            `;
+        }
+    }
+
+    // Initialize everything when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        initializePage();
+        new GlassBubble();
+    });
+</script>
+```
+
+</body>
+</html>
