@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Download Our Software</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #f5f5f7;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      color: #1d1d1f;
+      margin-bottom: 20px;
+    }
+
+    #download-section {
+      text-align: center;
+    }
+
+    .button {
+      display: inline-block;
+      background-color: rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 10px;
+      padding: 15px 30px;
+      color: #000;
+      text-decoration: none;
+      font-size: 18px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      margin: 10px;
+    }
+
+    .button:hover {
+      background-color: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #mac-download {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    #mobile-message p {
+      color: #1d1d1f;
+      font-size: 18px;
+    }
+
+    .other-os-link {
+      display: block;
+      margin-top: 20px;
+      color: #007aff;
+      text-decoration: none;
+    }
+
+    .other-os-link:hover {
+      text-decoration: underline;
+    }
+
+    #other-downloads {
+      margin-top: 20px;
+    }
+
+    #other-downloads h2 {
+      color: #1d1d1f;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Download Our Software</h1>
+  <div id="download-section">
+    <div id="windows-download" class="hidden">
+      <a href="#" class="button">Windows Download</a>
+      <a href="#" class="other-os-link">Not your OS? Click here</a>
+    </div>
+    <div id="mac-download" class="hidden">
+      <a href="#" class="button">Mac (Intel) Download</a>
+      <a href="#" class="button">Mac (Apple Silicon) Download</a>
+      <a href="#" class="other-os-link">Not your OS? Click here</a>
+    </div>
+    <div id="mobile-message" class="hidden">
+      <p>Please visit on a computer to download.</p>
+      <a href="#" class="other-os-link">Not your OS? Click here</a>
+    </div>
+    <div id="other-downloads">
+      <h2>Other Downloads</h2>
+      <a href="#" class="button">Windows Download</a>
+      <a href="#" class="button">Mac (Intel) Download</a>
+      <a href="#" class="button">Mac (Apple Silicon) Download</a>
+    </div>
+  </div>
+  <script>
+    function getOS() {
+      const userAgent = navigator.userAgent;
+      if (/Windows/.test(userAgent)) {
+        return 'windows';
+      } else if (/Macintosh/.test(userAgent)) {
+        return 'mac';
+      } else if (/Mobi|Android|iPhone|iPad/.test(userAgent)) {
+        return 'mobile';
+      } else {
+        return 'other';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const os = getOS();
+      const windowsDiv = document.getElementById('windows-download');
+      const macDiv = document.getElementById('mac-download');
+      const mobileDiv = document.getElementById('mobile-message');
+      const otherDownloads = document.getElementById('other-downloads');
+
+      if (os === 'windows') {
+        windowsDiv.classList.remove('hidden');
+        otherDownloads.classList.add('hidden');
+      } else if (os === 'mac') {
+        macDiv.classList.remove('hidden');
+        otherDownloads.classList.add('hidden');
+      } else if (os === 'mobile') {
+        mobileDiv.classList.remove('hidden');
+        otherDownloads.classList.add('hidden');
+      } else {
+        otherDownloads.classList.remove('hidden');
+      }
+
+      const otherOsLinks = document.querySelectorAll('.other-os-link');
+      otherOsLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          windowsDiv.classList.add('hidden');
+          macDiv.classList.add('hidden');
+          mobileDiv.classList.add('hidden');
+          otherDownloads.classList.remove('hidden');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
