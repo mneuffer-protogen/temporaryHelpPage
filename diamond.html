@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>three.js Gemstone — realistic refraction</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    html, body { height: 100%; margin: 0; background: #fff; color: #111; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+    #app { position: fixed; inset: 0; }
+    #ui {
+      position: fixed; top: 16px; left: 16px; z-index: 10;
+      background: rgba(255,255,255,.85); backdrop-filter: blur(8px);
+      border: 1px solid rgba(0,0,0,.08); border-radius: 12px; padding: 12px 14px; min-width: 240px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.08);
+    }
+    #ui h3 { margin: 0 0 8px 0; font-size: 14px; letter-spacing: .2px; font-weight: 600; }
+    #ui label { display: block; font-size: 12px; opacity: .8; margin: 10px 0 4px; }
+    #ui select, #ui input[type="range"] {
+      width: 100%; border-radius: 10px; border: 1px solid rgba(0,0,0,.15);
+      padding: 6px 10px; background: rgba(255,255,255,.9); font-size: 13px;
+    }
+    #ui .row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+    #readout { margin-top: 6px; font-size: 12px; line-height: 1.35; opacity: .85; }
+    .pill { display:inline-block; padding: 2px 8px; border-radius: 999px; background: #f3f4f6; font-size: 11px; margin-left: 6px; }
+    a.minilink { color: inherit; opacity: .6; text-decoration: none; border-bottom: 1px dotted #aaa; }
+    #hint { position: fixed; right: 16px; bottom: 16px; z-index: 10; font-size: 12px; opacity: .6; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <div id="ui">
+    <h3>Gemstone <span class="pill" id="gemNamePill">Diamond</span></h3>
+    <label for="gemSelect">Preset</label>
+    <select id="gemSelect">
+      <option>Diamond</option>
+      <option>Ruby</option>
+      <option>Sapphire</option>
+      <option>Emerald</option>
+      <option>Amethyst</option>
+      <option>Aquamarine</option>
+      <option>Citrine</option>
+      <option>Topaz</option>
+      <option>Peridot</option>
+    </select>
+
+    <label for="rotate">Auto-rotate</label>
+    <div class="row">
+      <input id="rotate" type="range" min="0" max="1" step="1" value="1">
+      <span id="rotateVal" style="font-size:12px; opacity:.7;">on</span>
+    </div>
+
+    <label for="exposure">Exposure</label>
+    <input id="exposure" type="range" min="0.5" max="2.25" step="0.01" value="1.15" />
+
+    <div id="readout">
+      <div><strong>IOR</strong>: <span id="lblIor">2.417</span></div>
+      <div><strong>Attenuation</strong>: <span id="lblAttn">∞</span></div>
+      <div><strong>Roughness</strong>: <span id="lblR">0.02</span></div>
+    </div>
+  </div>
+
+  <div id="hint">Drag to orbit • Scroll to zoom • Double-click to focus</div>
+
+  <script type="module">
+    import * as THREE from 'https://unpkg.com/three@0.165.0/build/three.module.js';
+    import { OrbitControls } from 'https://unpkg.com/three@0.165.0/examples/jsm/controls/OrbitControls.js';
+    import { RoomEnvironment } from 'https://unpkg.com/three@0.165.0/examples/jsm/environments/RoomEnvironment.js';
+    import { RectAreaLightUniformsLib } from 'https://unpkg.com/three@0.165.0/examples/jsm/lights/RectAreaLightUniformsLib.js';
+    import { RectAreaLightHelper } from 'https://unpkg.com/three@0.165.0/examples/jsm/helpers/RectAreaLightHelper.js';
+
+    // ---------- basic scene ----------
+    const container = document.getElementById('app');
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.15;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    // In modern three, lights are physically correct by default; this keeps old code intent explicit:
+    renderer.physicallyCorrectLights = true;
+
+    container.appendChild(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xffffff);
+
+    // Camera
+    const camera = new THREE.PerspectiveCamera(35, innerWidth / innerHeight, 0.1, 100);
+    camera.position.set(3.25, 2.2, 4.25);
+
+    // Controls
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.06;
+    controls.minDistance = 1.2;
+    controls.maxDistance = 12;
+    controls.target.set(0, 0.6, 0);
+
+    // Environment (soft studio)
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const env = pmrem.fromScene(new RoomEnvironment({}), 0.6).texture; // neutral, high-key room
+    scene.environment = env;
+
+    // ---------- white backdrop (infinity cove) ----------
+    // Floor (shadow catcher)
+    const floor = new THREE.Mesh(
+      new THREE.PlaneGeometry(20, 20),
+      new THREE.ShadowMaterial({ opacity: 0.08 })
+    );
+    floor.rotation.x = -Math.PI / 2;
+    floor.receiveShadow = true;
+    scene.add(floor);
+
+    // Curved "sweep" wall for a seamless white background
+    const sweep = new THREE.Mesh(
+      new THREE.CylinderGeometry(10, 10, 10, 64, 1, true, Math.PI/2, Math.PI/2),
+      new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9, metalness: 0 })
+    );
+    sweep.position.set(0, 5, -5);
+    sweep.rotation.z = Math.PI / 2;
+    sweep.receiveShadow = true;
+    scene.add(sweep);
+
+    // ---------- lighting: softbox panels + shadowed spots ----------
+    RectAreaLightUniformsLib.init();
+
+    function makeSoftbox(x, y, z, rx=0, ry=0, rz=0, intensity=35, width=2.4, height=1.2) {
+      const light = new THREE.RectAreaLight(0xffffff, intensity, width, height);
+      light.position.set(x, y, z);
+      light.rotation.set(rx, ry, rz);
+      scene.add(light);
+
+      // Visible panel for nice reflections
+      const panel = new THREE.Mesh(
+        new THREE.PlaneGeometry(width, height),
+        new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide })
+      );
+      panel.position.copy(light.position);
+      panel.rotation.copy(light.rotation);
+      panel.position.add(new THREE.Vector3(0, 0, 0.001)); // avoid z-fighting
+      scene.add(panel);
+
+      return light;
+    }
+
+    // Softboxes (just for beautiful reflections)
+    makeSoftbox( 3.2, 3.2,  3.2,    -0.4,  0.8,  0,  25, 2.2, 1.1);
+    makeSoftbox(-3.0, 2.8,  2.4,     0.0, -0.8,  0,  18, 1.8, 1.1);
+    makeSoftbox( 0.0, 4.2, -2.8,    -0.9,  0.0,  0,  20, 3.0, 1.2);
+
+    // Shadow-casting key/fill/rim spots (RectAreaLight does not cast shadows)
+    const key = new THREE.SpotLight(0xffffff, 2250, 0, Math.PI/6, 0.2, 1.0);
+    key.position.set(4, 6, 5);
+    key.target.position.set(0, 0.8, 0);
+    key.castShadow = true;
+    key.shadow.mapSize.set(2048, 2048);
+    key.shadow.bias = -0.00015;
+    scene.add(key, key.target);
+
+    const fill = new THREE.SpotLight(0xffffff, 900, 0, Math.PI/5, 0.35, 1.0);
+    fill.position.set(-5, 4, 3);
+    fill.target.position.set(0, 0.8, 0.2);
+    fill.castShadow = true;
+    fill.shadow.mapSize.set(1024, 1024);
+    fill.shadow.bias = -0.0002;
+    scene.add(fill, fill.target);
+
+    const rim = new THREE.SpotLight(0xffffff, 1100, 0, Math.PI/5, 0.2, 1.0);
+    rim.position.set(0.5, 5.2, -4.6);
+    rim.target.position.set(0, 0.9, 0);
+    rim.castShadow = true;
+    rim.shadow.mapSize.set(1024, 1024);
+    scene.add(rim, rim.target);
+
+    // Low ambient to lift the darkest tones
+    scene.add(new THREE.AmbientLight(0xffffff, 0.05));
+
+    // ---------- gemstone geometry ----------
+    // A clean, faceted octahedron (double pyramid) scaled to feel like a brilliant stone.
+    // (Procedural brilliant cuts are possible, but this keeps it compact and fast.)
+    const gemRadius = 0.8;
+    const gemGeo = new THREE.OctahedronGeometry(gemRadius, 0);
+    // Slightly compress along Z and stretch Y to hint at crown/pavilion proportions
+    gemGeo.scale(1.0, 1.18, 0.98);
+    gemGeo.computeVertexNormals();
+    gemGeo.computeBoundingSphere();
+    gemGeo.computeBoundingBox();
+
+    // Estimate a physical thickness so transmission has distance to integrate over
+    const bbox = gemGeo.boundingBox;
+    const approxThickness = bbox.max.y - bbox.min.y; // ~stone height in scene units
+
+    // Core refractive material
+    const gemMat = new THREE.MeshPhysicalMaterial({
+      color: 0xffffff,
+      metalness: 0.0,
+      roughness: 0.02,
+      transmission: 1.0,   // physically-based refraction
+      transparent: true,
+      ior: 2.417,          // diamond
+      thickness: approxThickness * 1.05, // how far light travels through the volume
+      attenuationColor: new THREE.Color(0xffffff),
+      attenuationDistance: Infinity,
+      specularIntensity: 1.0,
+      specularColor: new THREE.Color(1, 1, 1),
+      envMapIntensity: 1.0
+    });
+
+    const gem = new THREE.Mesh(gemGeo, gemMat);
+    gem.position.y = 0.8;
+    gem.castShadow = true;
+    scene.add(gem);
+
+    // Optional silhouette to emphasize edges (very subtle)
+    const edges = new THREE.LineSegments(
+      new THREE.EdgesGeometry(gemGeo),
+      new THREE.LineBasicMaterial({ color: 0x222222, transparent: true, opacity: 0.08 })
+    );
+    edges.position.copy(gem.position);
+    scene.add(edges);
+
+    // ---------- presets ----------
+    // NOTE: Attenuation distances below are "1/e" absorption lengths in SCENE UNITS (meters by default).
+    // Smaller distance = stronger absorption (deeper color). Tuned to look plausible at this scale.
+    const GEMS = {
+      Diamond:   { ior: 2.417, color: 0xffffff, attnColor: 0xffffff, attnDist: Infinity, rough: 0.02, envIntensity: 1.05 },
+      Ruby:      { ior: 1.77,  color: 0xffffff, attnColor: 0x9b0000, attnDist: 0.45,     rough: 0.03, envIntensity: 1.0  },
+      Sapphire:  { ior: 1.77,  color: 0xffffff, attnColor: 0x2248ff, attnDist: 0.55,     rough: 0.03, envIntensity: 1.0  },
+      Emerald:   { ior: 1.58,  color: 0xffffff, attnColor: 0x1fae5b, attnDist: 0.38,     rough: 0.025,envIntensity: 1.0  },
+      Amethyst:  { ior: 1.54,  color: 0xffffff, attnColor: 0x8a5ecf, attnDist: 0.60,     rough: 0.03, envIntensity: 1.0  },
+      Aquamarine:{ ior: 1.58,  color: 0xffffff, attnColor: 0x7cc7e8, attnDist: 0.80,     rough: 0.02, envIntensity: 1.0  },
+      Citrine:   { ior: 1.54,  color: 0xffffff, attnColor: 0xffc23a, attnDist: 0.65,     rough: 0.028,envIntensity: 1.0  },
+      Topaz:     { ior: 1.62,  color: 0xffffff, attnColor: 0xf4d7a1, attnDist: 0.70,     rough: 0.028,envIntensity: 1.0  },
+      Peridot:   { ior: 1.66,  color: 0xffffff, attnColor: 0x9ec23b, attnDist: 0.52,     rough: 0.027,envIntensity: 1.0  }
+    };
+
+    // ---------- UI wiring ----------
+    const gemSelect   = document.getElementById('gemSelect');
+    const gemNamePill = document.getElementById('gemNamePill');
+    const lblIor      = document.getElementById('lblIor');
+    const lblAttn     = document.getElementById('lblAttn');
+    const lblR        = document.getElementById('lblR');
+    const exposureInp = document.getElementById('exposure');
+    const rotateInp   = document.getElementById('rotate');
+    const rotateVal   = document.getElementById('rotateVal');
+
+    function applyPreset(name) {
+      const p = GEMS[name] || GEMS.Diamond;
+      gemMat.color.setHex(p.color);
+      gemMat.ior = p.ior;
+      gemMat.roughness = p.rough;
+      gemMat.envMapIntensity = p.envIntensity;
+      gemMat.attenuationColor.setHex(p.attnColor);
+      gemMat.thickness = approxThickness * 1.05; // keep consistent scale
+      gemMat.attenuationDistance = Number.isFinite(p.attnDist) ? p.attnDist : Infinity;
+      gemMat.needsUpdate = true;
+
+      // slightly tweak key light for higher-ior stones for extra sparkle
+      key.intensity = (p.ior >= 2.0) ? 2600 : 2250;
+
+      // labels
+      gemNamePill.textContent = name;
+      lblIor.textContent = p.ior.toFixed(3);
+      lblR.textContent = p.rough.toFixed(3);
+      lblAttn.textContent = Number.isFinite(p.attnDist) ? (p.attnDist.toFixed(2) + ' m') : '∞';
+    }
+
+    gemSelect.addEventListener('change', e => applyPreset(e.target.value));
+    exposureInp.addEventListener('input', e => {
+      renderer.toneMappingExposure = parseFloat(e.target.value);
+    });
+    rotateInp.addEventListener('input', e => {
+      const on = parseInt(e.target.value) === 1;
+      rotateVal.textContent = on ? 'on' : 'off';
+    });
+
+    // Initialize
+    applyPreset('Diamond');
+
+    // ---------- interactions ----------
+    renderer.domElement.addEventListener('dblclick', () => {
+      controls.target.copy(gem.position);
+      controls.update();
+    });
+
+    // ---------- render loop ----------
+    let t = 0;
+    const clock = new THREE.Clock();
+    function animate() {
+      const dt = clock.getDelta();
+      t += dt;
+
+      if (parseInt(rotateInp.value) === 1) {
+        gem.rotation.y += dt * 0.4;
+        gem.rotation.x = Math.sin(t * 0.25) * 0.08;
+        edges.rotation.copy(gem.rotation);
+      }
+
+      controls.update();
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // ---------- resize ----------
+    window.addEventListener('resize', () => {
+      camera.aspect = innerWidth / innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(innerWidth, innerHeight);
+    });
+
+    // ---------- tiny quality-of-life: focus on first load ----------
+    setTimeout(() => { controls.update(); }, 0);
+  </script>
+</body>
+</html>
