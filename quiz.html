@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microgrid Knowledge Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #4a90a4 50%, #27ae60 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #4CAF50, #2196F3, #FF9800);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #2196F3);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.2em;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .question-view {
+            display: none;
+        }
+
+        .question-view.active {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-number {
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .question-text {
+            font-size: 1.3em;
+            margin-bottom: 30px;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            padding: 15px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 1em;
+            position: relative;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+            transform: translateY(-2px);
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .option.selected:hover {
+            background: #667eea;
+            border-color: #667eea;
+        }
+
+        .option.correct {
+            border-color: #4CAF50;
+            background: #4CAF50;
+            color: white;
+        }
+
+        .option.incorrect {
+            border-color: #f44336;
+            background: #f44336;
+            color: white;
+        }
+
+        .feedback {
+            display: none;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: left;
+            line-height: 1.5;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .feedback.correct {
+            background: #e8f5e8;
+            border: 1px solid #4CAF50;
+            color: #2e7d32;
+        }
+
+        .feedback.incorrect {
+            background: #ffebee;
+            border: 1px solid #f44336;
+            color: #c62828;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .welcome-screen {
+            display: none;
+        }
+
+        .welcome-screen.active {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        .results-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .results-screen.active {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        .score {
+            font-size: 3em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+        }
+
+        .score-message {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            color: #555;
+        }
+
+        .icon {
+            font-size: 4em;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+
+        <!-- Welcome Screen -->
+        <div class="welcome-screen active" id="welcomeScreen">
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnR3JhZGllbnQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMmM0ZTUwIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjNGE5MGE0Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzI3YWU2MCIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgCiAgPCEtLSBIZXhhZ29uIGJhY2tncm91bmQgLS0+CiAgPHBhdGggZD0iTTIwIDMwIEw4MCAzMCBMOTAgNTAgTDgwIDcwIEwyMCA3MCBMMTAGNTHUGEMJAGF1ciIgCiAgICAgICAgZmlsbD0idXJsKCNiZ0dyYWRpZW50KSIgCiAgICAgICAgc3Ryb2tlPSIjMjdhZTYwIiAKICAgICAgICBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIFByb3RvR2VuIHRleHQgLS0+CiAgPHRleHQgeD0iNTAiIHk9IjI1IiAKICAgICAgICB0ZXh0LWFuY2hvcj0ibWlkZGxlIiAKICAgICAgICBmaWxsPSJ3aGl0ZSIgCiAgICAgICAgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiAKICAgICAgICBmb250LXNpemU9IjEwIiAKICAgICAgICBmb250LXdlaWdodD0iYm9sZCI+UHJvdG9HZW48L3RleHQ+CiAgCiAgPCEtLSBOZXR3b3JrIG5vZGVzIC0tPgogIDxjaXJjbGUgY3g9IjM1IiBjeT0iNTUiIHI9IjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIvPgogIDxjaXJjbGUgY3g9IjUwIiBjeT0iNDAiIHI9IjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIvPgogIDxjaXJjbGUgY3g9IjY1IiBjeT0iNTUiIHI9IjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIvPgogIDxjaXJjbGUgY3g9IjUwIiBjeT0iNjciIHI9IjYiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gTmV0d29yayBjb25uZWN0aW9ucyAtLT4KICA8bGluZSB4MT0iMzUiIHkxPSI1NSIgeDI9IjUwIiB5Mj0iNDAiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIvPgogIDxsaW5lIHgxPSI1MCIgeTE9IjQwIiB4Mj0iNjUiIHkyPSI1NSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPGxpbmUgeDE9IjY1IiB5MT0iNTUiIHgyPSI1MCIgeTI9IjY3IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KICA8bGluZSB4MT0iNTAiIHkxPSI2NyIgeDI9IjM1IiB5Mj0iNTUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIvPgogIAogIDwhLS0gUGx1cyBzeW1ib2xzIGluIG5vZGVzIC0tPgogIDx0ZXh0IHg9IjM1IiB5PSI1OCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzI3YWU2MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjgiIGZvbnQtd2VpZ2h0PSJib2xkIj4rPC90ZXh0PgogIDx0ZXh0IHg9IjY1IiB5PSI1OCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzI3YWU2MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjgiIGZvbnQtd2VpZ2h0PSJib2xkIj4rPC90ZXh0PgogIDx0ZXh0IHg9IjUwIiB5PSI0NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzI3YWU2MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjgiIGZvbnQtd2VpZ2h0PSJib2xkIj4tPC90ZXh0PgogIDx0ZXh0IHg9IjUwIiB5PSI3MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzI3YWU2MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjgiIGZvbnQtd2VpZ2h0PSJib2xkIj4tPC90ZXh0Pgo8L3N2Zz4=" alt="ProtoGen Logo" style="width: 150px; height: 150px; margin-bottom: 20px;">
+            <h1>⚡ Microgrid Knowledge Quiz</h1>
+            <p class="subtitle">Test your understanding of microgrids and distributed energy systems</p>
+            <p style="margin: 30px 0; color: #666; line-height: 1.6;">
+                This quiz contains 3 multiple-choice questions about microgrids. 
+                You'll receive instant feedback after each answer to help you learn!
+            </p>
+            <button class="btn" onclick="startQuiz()">Start Quiz</button>
+        </div>
+
+        <!-- Question 1 -->
+        <div class="question-view" id="question1">
+            <div class="question-number">Question 1 of 3</div>
+            <div class="question-text">What is the primary advantage of a microgrid over the traditional centralized power grid?</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(1, 'a', this)">A) Lower initial installation costs</div>
+                <div class="option" onclick="selectOption(1, 'b', this)">B) Enhanced energy resilience and ability to operate independently</div>
+                <div class="option" onclick="selectOption(1, 'c', this)">C) Simpler maintenance requirements</div>
+                <div class="option" onclick="selectOption(1, 'd', this)">D) Higher energy transmission efficiency over long distances</div>
+            </div>
+            <div class="feedback" id="feedback1"></div>
+            <button class="btn" id="submit1" onclick="submitAnswer(1)" disabled>Submit Answer</button>
+            <button class="btn" id="next1" onclick="nextQuestion()" disabled style="display: none;">Next Question</button>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="question-view" id="question2">
+            <div class="question-number">Question 2 of 3</div>
+            <div class="question-text">Which of the following energy sources is NOT commonly integrated into microgrids?</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(2, 'a', this)">A) Solar panels (photovoltaic systems)</div>
+                <div class="option" onclick="selectOption(2, 'b', this)">B) Wind turbines</div>
+                <div class="option" onclick="selectOption(2, 'c', this)">C) Large-scale hydroelectric dams</div>
+                <div class="option" onclick="selectOption(2, 'd', this)">D) Battery energy storage systems</div>
+            </div>
+            <div class="feedback" id="feedback2"></div>
+            <button class="btn" id="submit2" onclick="submitAnswer(2)" disabled>Submit Answer</button>
+            <button class="btn" id="next2" onclick="nextQuestion()" disabled style="display: none;">Next Question</button>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="question-view" id="question3">
+            <div class="question-number">Question 3 of 3</div>
+            <div class="question-text">What is "islanding" in the context of microgrids?</div>
+            <div class="options">
+                <div class="option" onclick="selectOption(3, 'a', this)">A) Installing microgrids only on geographical islands</div>
+                <div class="option" onclick="selectOption(3, 'b', this)">B) The ability to disconnect from the main grid and operate independently</div>
+                <div class="option" onclick="selectOption(3, 'c', this)">C) Connecting multiple microgrids together in a network</div>
+                <div class="option" onclick="selectOption(3, 'd', this)">D) The process of gradually shutting down a microgrid</div>
+            </div>
+            <div class="feedback" id="feedback3"></div>
+            <button class="btn" id="submit3" onclick="submitAnswer(3)" disabled>Submit Answer</button>
+            <button class="btn" id="next3" onclick="showResults()" disabled style="display: none;">See Results</button>
+        </div>
+
+        <!-- Results Screen -->
+        <div class="results-screen" id="resultsScreen">
+            <h1>Quiz Complete!</h1>
+            <div class="icon" id="resultsIcon">🎉</div>
+            <div class="score" id="finalScore">0/3</div>
+            <div class="score-message" id="scoreMessage"></div>
+            <button class="btn" onclick="restartQuiz()">Take Quiz Again</button>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 0;
+        let score = 0;
+        let answers = {};
+
+        const correctAnswers = {
+            1: 'b',
+            2: 'c',
+            3: 'b'
+        };
+
+        const feedbackText = {
+            1: {
+                correct: "✅ Correct! Enhanced energy resilience and the ability to operate independently during grid outages is indeed the primary advantage of microgrids. This capability, known as 'islanding,' allows communities and facilities to maintain power during emergencies.",
+                incorrect: "❌ Not quite. While microgrids may have some of these benefits, their primary advantage is enhanced energy resilience and the ability to operate independently from the main grid during outages or emergencies."
+            },
+            2: {
+                correct: "✅ Correct! Large-scale hydroelectric dams are typically part of the centralized grid infrastructure due to their massive scale and generation capacity. Microgrids usually incorporate smaller, distributed energy sources that can be locally controlled.",
+                incorrect: "❌ Incorrect. Solar panels, wind turbines, and battery storage are all commonly integrated into microgrids. Large-scale hydroelectric dams are typically too large for microgrid applications and are part of the centralized grid."
+            },
+            3: {
+                correct: "✅ Excellent! Islanding refers to a microgrid's ability to disconnect from the main electrical grid and continue operating independently using its local energy resources. This is a crucial feature for maintaining power during grid outages.",
+                incorrect: "❌ Not correct. Islanding refers to the ability of a microgrid to disconnect from the main grid and operate independently using its own local energy sources and storage systems."
+            }
+        };
+
+        function updateProgressBar() {
+            const progress = (currentQuestion / 3) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function startQuiz() {
+            document.getElementById('welcomeScreen').classList.remove('active');
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('question1').classList.add('active');
+            currentQuestion = 1;
+            updateProgressBar();
+        }
+
+        function selectOption(questionNum, option, element) {
+            // Remove previous selections
+            const options = document.querySelectorAll(`#question${questionNum} .option`);
+            options.forEach(opt => {
+                opt.classList.remove('selected');
+            });
+
+            // Mark selected option
+            element.classList.add('selected');
+            answers[questionNum] = option;
+
+            // Enable submit button
+            document.getElementById(`submit${questionNum}`).disabled = false;
+        }
+
+        function submitAnswer(questionNum) {
+            const selectedOption = answers[questionNum];
+            const options = document.querySelectorAll(`#question${questionNum} .option`);
+            
+            // Disable all options after submission
+            options.forEach(opt => {
+                opt.style.pointerEvents = 'none';
+            });
+
+            // Show feedback
+            const isCorrect = selectedOption === correctAnswers[questionNum];
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            
+            if (isCorrect) {
+                score++;
+                // Find and highlight correct answer
+                options.forEach((opt, index) => {
+                    const optionLetter = ['a', 'b', 'c', 'd'][index];
+                    if (optionLetter === correctAnswers[questionNum]) {
+                        opt.classList.remove('selected');
+                        opt.classList.add('correct');
+                    }
+                });
+                feedback.className = 'feedback correct show';
+                feedback.innerHTML = feedbackText[questionNum].correct;
+            } else {
+                // Highlight incorrect answer and show correct one
+                options.forEach((opt, index) => {
+                    const optionLetter = ['a', 'b', 'c', 'd'][index];
+                    if (optionLetter === selectedOption) {
+                        opt.classList.remove('selected');
+                        opt.classList.add('incorrect');
+                    }
+                    if (optionLetter === correctAnswers[questionNum]) {
+                        opt.classList.add('correct');
+                    }
+                });
+                feedback.className = 'feedback incorrect show';
+                feedback.innerHTML = feedbackText[questionNum].incorrect;
+            }
+
+            // Hide submit button and show next button
+            document.getElementById(`submit${questionNum}`).style.display = 'none';
+            const nextButton = document.getElementById(`next${questionNum}`);
+            nextButton.disabled = false;
+            nextButton.style.display = 'inline-block';
+        }
+
+        function nextQuestion() {
+            document.getElementById(`question${currentQuestion}`).classList.remove('active');
+            currentQuestion++;
+            document.getElementById(`question${currentQuestion}`).classList.add('active');
+            updateProgressBar();
+        }
+
+        function showResults() {
+            document.getElementById('question3').classList.remove('active');
+            document.getElementById('resultsScreen').classList.add('active');
+            
+            const finalScore = document.getElementById('finalScore');
+            const scoreMessage = document.getElementById('scoreMessage');
+            const resultsIcon = document.getElementById('resultsIcon');
+            
+            finalScore.textContent = `${score}/3`;
+            
+            if (score === 3) {
+                scoreMessage.textContent = "Outstanding! You have excellent knowledge of microgrids!";
+                resultsIcon.textContent = "🏆";
+            } else if (score === 2) {
+                scoreMessage.textContent = "Great job! You have a solid understanding of microgrids.";
+                resultsIcon.textContent = "⭐";
+            } else if (score === 1) {
+                scoreMessage.textContent = "Good start! Consider learning more about microgrid technology.";
+                resultsIcon.textContent = "👍";
+            } else {
+                scoreMessage.textContent = "Keep learning! Microgrids are a fascinating technology worth exploring.";
+                resultsIcon.textContent = "📚";
+            }
+            
+            updateProgressBar();
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            answers = {};
+            
+            // Reset all screens
+            document.querySelectorAll('.question-view, .results-screen').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.getElementById('welcomeScreen').classList.add('active');
+            document.getElementById('welcomeScreen').style.display = 'block';
+            
+            // Reset all options and feedback
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+                opt.style.pointerEvents = 'auto';
+            });
+            document.querySelectorAll('.feedback').forEach(fb => {
+                fb.classList.remove('show');
+            });
+            
+            // Reset buttons
+            document.querySelectorAll('[id^="submit"]').forEach(btn => {
+                btn.disabled = true;
+                btn.style.display = 'inline-block';
+            });
+            document.querySelectorAll('[id^="next"]').forEach(btn => {
+                btn.disabled = true;
+                btn.style.display = 'none';
+            });
+            
+            // Reset progress bar
+            document.getElementById('progressBar').style.width = '0%';
+        }
+
+        // Initialize progress bar
+        updateProgressBar();
+    </script>
+</body>
+</html>
