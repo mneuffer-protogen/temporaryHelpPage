@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ring Designer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fafafa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    h1 { color: #444; }
+    .wizard {
+      max-width: 600px;
+      width: 100%;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .step { display: none; }
+    .step.active { display: block; }
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 15px 0;
+    }
+    .option {
+      flex: 1 1 100px;
+      padding: 10px;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .option.selected {
+      border-color: #007BFF;
+      background: #eaf2ff;
+    }
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .btn-prev { background: #ccc; }
+    .btn-next { background: #007BFF; color: white; }
+    .preview {
+      margin-top: 30px;
+      text-align: center;
+    }
+    .ring {
+      width: 200px;
+      height: 200px;
+      border: 6px solid silver;
+      border-radius: 50%;
+      margin: 0 auto;
+      position: relative;
+      background: white;
+    }
+    .stone {
+      width: 60px;
+      height: 60px;
+      background: red;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      clip-path: circle(50% at 50% 50%);
+    }
+    .stone.shape-oval { border-radius: 50% / 70%; }
+    .stone.shape-square { border-radius: 0; }
+    .stone.shape-emerald { clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%); }
+  </style>
+</head>
+<body>
+  <h1>Design Your Ring</h1>
+  <div class="wizard">
+    <!-- Step 1 -->
+    <div class="step active" data-step="1">
+      <h2>Step 1: Choose Inspiration</h2>
+      <div class="options" id="inspiration-options">
+        <div class="option" data-value="classic">Classic</div>
+        <div class="option" data-value="vintage">Vintage</div>
+        <div class="option" data-value="modern">Modern</div>
+      </div>
+    </div>
+    <!-- Step 2 -->
+    <div class="step" data-step="2">
+      <h2>Step 2: Choose Stone Shape</h2>
+      <div class="options" id="shape-options">
+        <div class="option" data-value="round">Round</div>
+        <div class="option" data-value="oval">Oval</div>
+        <div class="option" data-value="square">Square</div>
+        <div class="option" data-value="emerald">Emerald</div>
+      </div>
+    </div>
+    <!-- Step 3 -->
+    <div class="step" data-step="3">
+      <h2>Step 3: Choose Stone Color</h2>
+      <div class="options" id="color-options">
+        <div class="option" data-value="red" style="background: #ffcccc;">Red</div>
+        <div class="option" data-value="blue" style="background: #cce0ff;">Blue</div>
+        <div class="option" data-value="green" style="background: #ccffcc;">Green</div>
+        <div class="option" data-value="clear" style="background: #eee;">Clear</div>
+      </div>
+    </div>
+    <!-- Step 4 -->
+    <div class="step" data-step="4">
+      <h2>Step 4: Choose Metal</h2>
+      <div class="options" id="metal-options">
+        <div class="option" data-value="silver">Silver</div>
+        <div class="option" data-value="gold">Gold</div>
+        <div class="option" data-value="rose-gold">Rose Gold</div>
+      </div>
+    </div>
+    <!-- Buttons -->
+    <div class="buttons">
+      <button class="btn-prev" onclick="prevStep()">Previous</button>
+      <button class="btn-next" onclick="nextStep()">Next</button>
+    </div>
+  </div>
+
+  <div class="preview">
+    <h2>Preview</h2>
+    <div class="ring" id="ring">
+      <div class="stone" id="stone"></div>
+    </div>
+    <p id="choices"></p>
+  </div>
+
+  <script>
+    let currentStep = 1;
+    const totalSteps = 4;
+    const selections = {
+      inspiration: null,
+      shape: "round",
+      color: "red",
+      metal: "silver"
+    };
+
+    function showStep(step) {
+      document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+      document.querySelector(`.step[data-step="${step}"]`).classList.add('active');
+    }
+
+    function nextStep() {
+      if (currentStep < totalSteps) {
+        currentStep++;
+        showStep(currentStep);
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 1) {
+        currentStep--;
+        showStep(currentStep);
+      }
+    }
+
+    function updatePreview() {
+      const stone = document.getElementById('stone');
+      stone.className = 'stone'; // reset
+      stone.classList.add("shape-" + selections.shape);
+      stone.style.background = selections.color === "clear" ? "white" : selections.color;
+      document.getElementById('ring').style.borderColor = 
+        selections.metal === "silver" ? "silver" :
+        selections.metal === "gold" ? "gold" : "pink";
+      document.getElementById('choices').innerText = 
+        `Inspiration: ${selections.inspiration || "None"}, 
+         Shape: ${selections.shape}, 
+         Color: ${selections.color}, 
+         Metal: ${selections.metal}`;
+    }
+
+    document.querySelectorAll('.option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const group = opt.parentElement.id.split('-')[0]; // e.g. "shape-options" → "shape"
+        document.querySelectorAll(`#${group}-options .option`).forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        selections[group] = opt.getAttribute('data-value');
+        updatePreview();
+      });
+    });
+
+    updatePreview();
+  </script>
+</body>
+</html>
