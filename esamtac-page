@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ESAMTAC Virtual Training Lab</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #111;
+    }
+
+    /* Top Navigation */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      border-bottom: 1px solid #ddd;
+    }
+    .navbar .logo {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .navbar nav a {
+      margin-left: 20px;
+      text-decoration: none;
+      color: #111;
+      font-weight: 500;
+    }
+    .navbar nav a:hover {
+      text-decoration: underline;
+    }
+
+    /* Main Layout */
+    .container {
+      display: flex;
+      padding: 20px 40px;
+    }
+    .content {
+      flex: 3;
+      padding-right: 40px;
+    }
+    .sidebar {
+      flex: 1;
+      border-left: 1px solid #eee;
+      padding-left: 30px;
+    }
+
+    /* Section Headers */
+    h2 {
+      margin-top: 30px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    /* Course Cards */
+    .course-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 10px;
+    }
+    .course-card {
+      background: #f7f7f7;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      width: 250px;
+      padding: 15px;
+    }
+    .course-card img {
+      width: 100%;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+    .course-title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .course-time, .course-date {
+      font-size: 14px;
+      color: #666;
+    }
+    .certificate-link {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 14px;
+      color: #0073e6;
+      text-decoration: none;
+    }
+    .certificate-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Sidebar */
+    .user-info {
+      text-align: left;
+    }
+    .user-avatar {
+      background: #4CAF50;
+      color: white;
+      font-weight: bold;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    .user-name {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .user-stats {
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    .assigned {
+      margin-top: 20px;
+    }
+    .assigned img {
+      width: 60px;
+      border-radius: 4px;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+    .assigned span {
+      font-size: 14px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="logo">ESAMTAC Virtual Training Lab</div>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Support</a>
+      <a href="#">Reach360</a>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container">
+    <!-- Left Content -->
+    <div class="content">
+      <h2>In Progress</h2>
+      <div class="course-grid">
+        <div class="course-card">
+          <img src="https://via.placeholder.com/250x140" alt="Course thumbnail">
+          <div class="course-title">Introduction to ESAMTAC</div>
+          <div class="course-time">45 min</div>
+        </div>
+      </div>
+
+      <h2>Completed</h2>
+      <div class="course-grid">
+        <div class="course-card" style="background:#4aa3df; color:#fff;">
+          <div class="course-title">Module 1: Safety Basics</div>
+          <div class="course-date">Completed: 09/22/2025</div>
+          <a class="certificate-link" href="#">Download Certificate</a>
+        </div>
+        <div class="course-card" style="background:#4aa3df; color:#fff;">
+          <div class="course-title">Module 2: Virtual Lab Setup</div>
+          <div class="course-date">Completed: 09/22/2025</div>
+          <a class="certificate-link" href="#">Download Certificate</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="user-info">
+        <div class="user-avatar">MN</div>
+        <div class="user-name">Matthew Neuffer</div>
+        <div class="user-stats">0 Hours<br>2 Completions</div>
+        <div class="assigned">
+          <div>
+            <img src="https://via.placeholder.com/60x40" alt="Assigned course">
+            <span>Introduction to ESAMTAC</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
