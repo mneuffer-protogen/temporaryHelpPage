@@ -6,314 +6,334 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Download - ESAMTAC Virtual Training Lab</title>
     <style>
+        /* 1. Base Reset and Box Sizing */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #2F4F4F 0%, #1E3A8A 50%, #2F4F4F 100%);
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        position: relative;
-        overflow: hidden;
-        padding: 40px 20px;
-    }
-
-    body::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: 
-            radial-gradient(circle at 20% 30%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
-            radial-gradient(circle at 40% 80%, rgba(30, 144, 255, 0.08) 0%, transparent 50%);
-        z-index: 0;
-    }
-
-    .container {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(40px) saturate(180%);
-        border-radius: 24px;
-        padding: 4rem;
-        text-align: center;
-        box-shadow: 
-            0 20px 40px rgba(0, 0, 0, 0.1),
-            0 1px 1px rgba(255, 255, 255, 0.1),
-            inset 0 1px 1px rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        max-width: 500px;
-        width: 90%;
-        position: relative;
-        z-index: 1;
-    }
-
-    .container::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
-        border-radius: 24px;
-        z-index: -1;
-    }
-
-    .logo {
-        width: 500px;
-        max-width: 250px;
-        height: auto;
-        margin-bottom: 30px;
-        filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
-        position: relative;
-        z-index: 1;
-    }
-
-    .page-wrapper {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-    }
-
-    .help-button {
-        background: linear-gradient(45deg, #1E3A8A, #2F4F4F);
-        color: white;
-        border: none;
-        padding: 12px 24px;
-        font-size: 1rem;
-        font-weight: 600;
-        border-radius: 25px;
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        margin-top: 20px;
-    }
-
-    .help-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-    }
-
-    .help-button:active {
-        transform: translateY(0);
-    }
-
-    h1 {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-        font-weight: 700;
-        background: linear-gradient(45deg, #1E3A8A, #2F4F4F);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        letter-spacing: -0.02em;
-    }
-
-    .subtitle {
-        font-size: 1.1rem;
-        color: #666;
-        margin-bottom: 2rem;
-    }
-
-    .download-section {
-        margin-bottom: 2rem;
-    }
-
-    .download-btn {
-        background: linear-gradient(45deg, #1E3A8A, #2F4F4F);
-        color: white;
-        border: none;
-        padding: 1.25rem 2.5rem;
-        font-size: 1.1rem;
-        font-weight: 600;
-        border-radius: 50px;
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        text-decoration: none;
-        display: inline-block;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .download-btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(45deg, #2F4F4F, #1E3A8A);
-        border-radius: 50px;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        z-index: -1;
-    }
-
-    .download-btn:hover::before {
-        opacity: 1;
-    }
-
-    .download-btn:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-    }
-
-    .download-btn:active {
-        transform: translateY(0);
-    }
-
-    .mobile-message {
-        background: linear-gradient(45deg, rgba(30, 58, 138, 0.1), rgba(0, 0, 0, 0.05));
-        backdrop-filter: blur(20px) saturate(180%);
-        border-radius: 20px;
-        padding: 2rem;
-        margin-bottom: 2rem;
-        border: 1px solid rgba(30, 58, 138, 0.2);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .mobile-message h2 {
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
-        background: linear-gradient(45deg, #1E3A8A, #2F4F4F);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        font-weight: 600;
-    }
-
-    .mobile-message p {
-        color: #555;
-        line-height: 1.6;
-    }
-
-    .os-info {
-        background: linear-gradient(45deg, rgba(30, 58, 138, 0.05), rgba(0, 0, 0, 0.02));
-        backdrop-filter: blur(20px) saturate(180%);
-        border-radius: 12px;
-        padding: 1rem;
-        margin-bottom: 2rem;
-        font-size: 0.9rem;
-        color: #666;
-        border: 1px solid rgba(30, 58, 138, 0.1);
-    }
-
-    .other-downloads {
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 1px solid rgba(30, 58, 138, 0.2);
-    }
-
-    .other-downloads h3 {
-        font-size: 1.2rem;
-        margin-bottom: 1rem;
-        color: #2c3e50;
-        font-weight: 600;
-    }
-
-    .download-links {
-        display: flex;
-        gap: 1rem;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-
-    .download-link {
-        background: linear-gradient(45deg, rgba(30, 58, 138, 0.1), rgba(0, 0, 0, 0.05));
-        color: #2c3e50;
-        text-decoration: none;
-        padding: 0.75rem 1.5rem;
-        border-radius: 30px;
-        font-size: 0.9rem;
-        font-weight: 500;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 1px solid rgba(30, 58, 138, 0.2);
-    }
-
-    .download-link:hover {
-        background: linear-gradient(45deg, #1E3A8A, #2F4F4F);
-        color: white;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-    }
-
-    .toggle-btn {
-        background: linear-gradient(45deg, rgba(30, 58, 138, 0.1), rgba(0, 0, 0, 0.05));
-        color: #2c3e50;
-        border: 1px solid rgba(30, 58, 138, 0.2);
-        padding: 0.75rem 1.5rem;
-        border-radius: 25px;
-        cursor: pointer;
-        font-size: 0.9rem;
-        font-weight: 500;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        margin-bottom: 1rem;
-    }
-
-    .toggle-btn:hover {
-        background: linear-gradient(45deg, #1E3A8A, #2F4F4F);
-        color: white;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .hidden {
-        display: none;
-    }
-
-    @media (max-width: 480px) {
-        .container {
-            padding: 2rem 1.5rem;
+        /* Define new color variables for easy adjustment */
+        :root {
+            --color-primary: #0077b6;       /* Vibrant Blue/Teal for main elements */
+            --color-secondary: #0096c7;     /* Lighter blue for hover/accents */
+            --color-background-dark: #03045e; /* Deep, rich background blue */
+            --color-text-dark: #1E2024;     /* Near-black for body text */
+            --color-text-subtle: #6c757d;   /* Muted grey for subtitles/info */
+            --color-white: #ffffff;
         }
-        
-        h1 {
-            font-size: 2rem;
-        }
-        
-        .download-links {
+
+        /* 2. Body and Overall Background - Simpler, Darker, Richer */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Simple, deep blue gradient or solid color for a professional, dark feel */
+            background: var(--color-background-dark);
+            min-height: 100vh;
+            display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+            color: var(--color-white); /* Ensures main page elements are readable */
+            position: relative;
+            overflow: hidden;
+            padding: 40px 20px;
         }
 
+        /* Subtle background texture remains, but toned down */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(120, 119, 198, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            z-index: 0;
+        }
+
+        /* 3. Main Container - Clean White for Readability */
+        .container {
+            /* Set a clean, near-solid white for max readability */
+            background: rgba(255, 255, 255, 1);
+            backdrop-filter: blur(10px); /* Slightly less aggressive blur */
+            border-radius: 20px; /* Slightly softer corners */
+            padding: 3rem; /* Slightly reduced padding */
+            text-align: center;
+            box-shadow:
+                0 15px 30px rgba(0, 0, 0, 0.2), /* Softer shadow */
+                0 1px 1px rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05); /* Soft border for definition */
+            max-width: 550px; /* Slightly wider container */
+            width: 90%;
+            position: relative;
+            z-index: 1;
+            color: var(--color-text-dark); /* Essential: All text inside the container is dark */
+        }
+
+        .container::before {
+            content: none; /* Remove the inner gradient for a cleaner look */
+        }
+
+        .logo {
+            width: 500px;
+            max-width: 250px;
+            height: auto;
+            margin-bottom: 25px;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1)); /* Lighter shadow */
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* 8. Help Button - Similar to Download Button, but smaller */
         .help-button {
-            position: static;
-            margin-bottom: 20px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0, 119, 182, 0.4);
             margin-top: 20px;
         }
-    }
-</style>
+
+        .help-button:hover {
+            background: var(--color-secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 119, 182, 0.6);
+        }
+
+        .help-button:active {
+            transform: translateY(0);
+        }
+
+        /* 5. Headings and Text */
+        h1 {
+            font-size: 2.2rem; /* Slightly smaller for cleaner look */
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+            /* Use solid primary color instead of clipped gradient for better readability */
+            color: var(--color-primary);
+            -webkit-background-clip: unset;
+            -webkit-text-fill-color: unset;
+            background-clip: unset;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 1.05rem;
+            color: var(--color-text-subtle);
+            margin-bottom: 2rem;
+            line-height: 1.5; /* Improved line height */
+        }
+
+        .download-section {
+            margin-bottom: 2rem;
+        }
+
+        /* 4. Primary Button Style - Vibrant & Active */
+        .download-btn {
+            background: var(--color-primary); /* Solid primary color */
+            color: var(--color-white);
+            border: none;
+            padding: 1.25rem 3rem;
+            font-size: 1.15rem; /* Slightly larger font */
+            font-weight: 700; /* Bolder font */
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 8px 20px rgba(0, 119, 182, 0.4); /* Shadow matches new primary color */
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--color-secondary); /* Use secondary color for hover effect */
+            border-radius: 50px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .download-btn:hover::before {
+            opacity: 1;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px); /* Stronger hover lift */
+            box-shadow: 0 15px 35px rgba(0, 119, 182, 0.6);
+        }
+
+        .download-btn:active {
+            transform: translateY(0);
+        }
+
+        /* 6. Info Blocks (OS Info & Mobile Message) - Lighter and Cleaner */
+        .mobile-message {
+            background: #ffe0b2; /* Warm, soft background for cautionary messages */
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 160, 0, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .mobile-message h2 {
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+            color: #ff8c00; /* Warm, easily visible warning color */
+            -webkit-background-clip: unset;
+            -webkit-text-fill-color: unset;
+            background-clip: unset;
+            font-weight: 700;
+        }
+
+        .mobile-message p {
+            color: var(--color-text-dark);
+            line-height: 1.6;
+        }
+
+        .os-info {
+            background: #f1f7fe; /* Very light blue background */
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+            color: var(--color-primary); /* Text color matches primary for cohesion */
+            font-weight: 600;
+            border: 1px solid rgba(0, 119, 182, 0.2);
+        }
+
+        /* 7. Other Downloads Section - Simplified and Cohesive */
+        .other-downloads {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #dee2e6; /* Clean, light separator */
+        }
+
+        .other-downloads h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--color-text-dark);
+            font-weight: 600;
+        }
+
+        .download-links {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .download-link {
+            background: #f8f9fa; /* Very light grey link background */
+            color: var(--color-text-dark);
+            text-decoration: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #ced4da; /* Light border */
+        }
+
+        .download-link:hover {
+            background: var(--color-primary);
+            color: var(--color-white);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 119, 182, 0.3);
+            border-color: var(--color-primary);
+        }
+
+        .toggle-btn {
+            background: #e9ecef;
+            color: var(--color-text-dark);
+            border: 1px solid #adb5bd;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 1rem;
+        }
+
+        .toggle-btn:hover {
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-color: var(--color-primary);
+            box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 2rem 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .download-btn {
+                padding: 1rem 2rem;
+                font-size: 1rem;
+            }
+
+            .download-links {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .help-button {
+                position: static;
+                margin-bottom: 10px;
+                margin-top: 15px;
+            }
+        }
+    </style>
 
 </head>
 <body>
     <div class="page-wrapper">
         <img src="https://rawcdn.githack.com/mneuffer-protogen/temporaryHelpPage/2963deb8cb92c2c9dd488cb021ef5dfdc814a472/logo-KO-2500.png" alt="ProtoGen Logo" class="logo">
-        
+
         <div class="container">
-        
+
         <h1>Download ESAMTAC Virtual Training Lab</h1>
         <p class="subtitle">Get the latest version for your device</p>
 
     <div class="os-info" id="osInfo"></div>
-    
+
     <div class="download-section" id="downloadSection">
-        <!-- Dynamic content will be inserted here -->
-    </div>
-    
+        </div>
+
     <div class="other-downloads">
         <button class="toggle-btn" id="toggleBtn" onclick="toggleOtherDownloads()">
             Show Other Downloads
@@ -327,7 +347,7 @@
             </div>
                     </div>
         </div>
-        
+
         <a href="https://mneuffer-protogen.github.io/temporaryHelpPage/" target="_blank" class="help-button">
             FAQ / Help
         </a>
@@ -339,28 +359,28 @@
     function detectOS() {
         const userAgent = navigator.userAgent;
         const platform = navigator.platform;
-        
+
         // Mobile detection
         if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)) {
             return 'mobile';
         }
-        
+
         // Windows detection
         if (platform.indexOf('Win') !== -1) {
             return 'windows';
         }
-        
+
         // Mac detection with Apple Silicon check
         if (platform.indexOf('Mac') !== -1) {
             // Try to detect Apple Silicon
             // This is a bit tricky, but we can use some heuristics
-            const hasAppleSilicon = /Mac.*ARM|Mac.*Apple/i.test(userAgent) || 
+            const hasAppleSilicon = /Mac.*ARM|Mac.*Apple/i.test(userAgent) ||
                                    navigator.maxTouchPoints > 1 ||
                                    screen.width === 1440 && screen.height === 900; // Common M1 MacBook resolution
-            
+
             return hasAppleSilicon ? 'mac-silicon' : 'mac-intel';
         }
-        
+
         return 'unknown';
     }
 
@@ -371,7 +391,7 @@
             'mac-intel': 'https://example.com/download/mac-intel/app-intel.dmg',
             'mac-silicon': 'https://example.com/download/mac-silicon/app-silicon.dmg',
         };
-        
+
         // For Windows, directly open the GitHub release link
         if (osType === 'windows') {
             window.open(downloads[osType], '_blank');
@@ -385,7 +405,7 @@
     function toggleOtherDownloads() {
         const otherDownloads = document.getElementById('otherDownloads');
         const toggleBtn = document.getElementById('toggleBtn');
-        
+
         if (otherDownloads.classList.contains('hidden')) {
             otherDownloads.classList.remove('hidden');
             toggleBtn.textContent = 'Hide Other Downloads';
@@ -400,7 +420,7 @@
         const os = detectOS();
         const osInfo = document.getElementById('osInfo');
         const downloadSection = document.getElementById('downloadSection');
-        
+
         // Display OS info
         const osNames = {
             'windows': 'Windows',
@@ -409,9 +429,9 @@
             'mobile': 'Mobile Device',
             'unknown': 'Unknown OS'
         };
-        
+
         osInfo.textContent = `Detected: ${osNames[os]}`;
-        
+
         // Create appropriate download section
         if (os === 'mobile') {
             downloadSection.innerHTML = `
