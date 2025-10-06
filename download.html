@@ -13,8 +13,8 @@
         }
 
     body {
-        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', sans-serif;
-        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #2F4F4F 0%, #1E3A8A 50%, #000000 100%);
         min-height: 100vh;
         display: flex;
         align-items: center;
@@ -39,13 +39,13 @@
     }
 
     .container {
-        background: rgba(255, 255, 255, 0.02);
+        background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(40px) saturate(180%);
         border-radius: 24px;
         padding: 4rem;
         text-align: center;
         box-shadow: 
-            0 8px 32px rgba(0, 0, 0, 0.3),
+            0 20px 40px rgba(0, 0, 0, 0.1),
             0 1px 1px rgba(255, 255, 255, 0.1),
             inset 0 1px 1px rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.08);
@@ -67,11 +67,47 @@
         z-index: -1;
     }
 
+    .logo {
+        width: 150px;
+        height: 150px;
+        margin-bottom: 20px;
+        filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+    }
+
+    .help-button {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(45deg, #1E3A8A, #000000);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .help-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .help-button:active {
+        transform: translateY(0);
+    }
+
     h1 {
         font-size: 2.5rem;
         margin-bottom: 1rem;
         font-weight: 700;
-        background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
+        background: linear-gradient(45deg, #1E3A8A, #000000);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -80,7 +116,7 @@
 
     .subtitle {
         font-size: 1.1rem;
-        opacity: 0.9;
+        color: #666;
         margin-bottom: 2rem;
     }
 
@@ -89,10 +125,9 @@
     }
 
     .download-btn {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
-        backdrop-filter: blur(20px) saturate(180%);
+        background: linear-gradient(45deg, #1E3A8A, #000000);
         color: white;
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: none;
         padding: 1.25rem 2.5rem;
         font-size: 1.1rem;
         font-weight: 600;
@@ -101,10 +136,7 @@
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         text-decoration: none;
         display: inline-block;
-        box-shadow: 
-            0 4px 20px rgba(0, 0, 0, 0.1),
-            0 1px 1px rgba(255, 255, 255, 0.1),
-            inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         position: relative;
         overflow: hidden;
     }
@@ -116,7 +148,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+        background: linear-gradient(45deg, #000000, #1E3A8A);
         border-radius: 50px;
         opacity: 0;
         transition: opacity 0.3s ease;
@@ -128,12 +160,8 @@
     }
 
     .download-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 
-            0 8px 30px rgba(0, 0, 0, 0.2),
-            0 2px 4px rgba(255, 255, 255, 0.1),
-            inset 0 1px 1px rgba(255, 255, 255, 0.2);
-        border-color: rgba(255, 255, 255, 0.3);
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
     }
 
     .download-btn:active {
@@ -141,21 +169,19 @@
     }
 
     .mobile-message {
-        background: rgba(255, 255, 255, 0.03);
+        background: linear-gradient(45deg, rgba(30, 58, 138, 0.1), rgba(0, 0, 0, 0.05));
         backdrop-filter: blur(20px) saturate(180%);
         border-radius: 20px;
         padding: 2rem;
         margin-bottom: 2rem;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 
-            0 4px 20px rgba(0, 0, 0, 0.1),
-            inset 0 1px 1px rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(30, 58, 138, 0.2);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 
     .mobile-message h2 {
         font-size: 1.5rem;
         margin-bottom: 1rem;
-        background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+        background: linear-gradient(45deg, #1E3A8A, #000000);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -163,32 +189,31 @@
     }
 
     .mobile-message p {
-        opacity: 0.9;
+        color: #555;
         line-height: 1.6;
     }
 
     .os-info {
-        background: rgba(255, 255, 255, 0.02);
+        background: linear-gradient(45deg, rgba(30, 58, 138, 0.05), rgba(0, 0, 0, 0.02));
         backdrop-filter: blur(20px) saturate(180%);
         border-radius: 12px;
         padding: 1rem;
         margin-bottom: 2rem;
         font-size: 0.9rem;
-        opacity: 0.8;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+        color: #666;
+        border: 1px solid rgba(30, 58, 138, 0.1);
     }
 
     .other-downloads {
         margin-top: 2rem;
         padding-top: 2rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        border-top: 1px solid rgba(30, 58, 138, 0.2);
     }
 
     .other-downloads h3 {
         font-size: 1.2rem;
         margin-bottom: 1rem;
-        opacity: 0.9;
+        color: #2c3e50;
         font-weight: 600;
     }
 
@@ -200,35 +225,28 @@
     }
 
     .download-link {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(20px) saturate(180%);
-        color: white;
+        background: linear-gradient(45deg, rgba(30, 58, 138, 0.1), rgba(0, 0, 0, 0.05));
+        color: #2c3e50;
         text-decoration: none;
         padding: 0.75rem 1.5rem;
         border-radius: 30px;
         font-size: 0.9rem;
         font-weight: 500;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 
-            0 2px 8px rgba(0, 0, 0, 0.1),
-            inset 0 1px 1px rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(30, 58, 138, 0.2);
     }
 
     .download-link:hover {
-        background: rgba(255, 255, 255, 0.1);
-        transform: translateY(-1px);
-        box-shadow: 
-            0 4px 12px rgba(0, 0, 0, 0.15),
-            inset 0 1px 1px rgba(255, 255, 255, 0.1);
-        border-color: rgba(255, 255, 255, 0.2);
+        background: linear-gradient(45deg, #1E3A8A, #000000);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     }
 
     .toggle-btn {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(20px) saturate(180%);
-        color: white;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: linear-gradient(45deg, rgba(30, 58, 138, 0.1), rgba(0, 0, 0, 0.05));
+        color: #2c3e50;
+        border: 1px solid rgba(30, 58, 138, 0.2);
         padding: 0.75rem 1.5rem;
         border-radius: 25px;
         cursor: pointer;
@@ -236,17 +254,12 @@
         font-weight: 500;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         margin-bottom: 1rem;
-        box-shadow: 
-            0 2px 8px rgba(0, 0, 0, 0.1),
-            inset 0 1px 1px rgba(255, 255, 255, 0.05);
     }
 
     .toggle-btn:hover {
-        background: rgba(255, 255, 255, 0.1);
-        border-color: rgba(255, 255, 255, 0.2);
-        box-shadow: 
-            0 4px 12px rgba(0, 0, 0, 0.15),
-            inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        background: linear-gradient(45deg, #1E3A8A, #000000);
+        color: white;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
 
     .hidden {
@@ -266,12 +279,23 @@
             flex-direction: column;
             align-items: center;
         }
+
+        .help-button {
+            position: static;
+            margin-bottom: 20px;
+        }
     }
 </style>
 
 </head>
 <body>
     <div class="container">
+        <a href="https://mneuffer-protogen.github.io/temporaryHelpPage/" target="_blank" class="help-button">
+            ❓ FAQ / Help
+        </a>
+        
+        <img src="https://rawcdn.githack.com/mneuffer-protogen/temporaryHelpPage/6e8691136727749bf2e65628cf7de0e63ca5c494/Hexagon%20Color%20Logo%20Large.png" alt="ProtoGen Logo" class="logo">
+        
         <h1>Download ESAMTAC Virtual Training Lab</h1>
         <p class="subtitle">Get the latest version for your device</p>
 
