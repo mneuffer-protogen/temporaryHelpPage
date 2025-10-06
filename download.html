@@ -13,12 +13,12 @@
             box-sizing: border-box;
         }
 
-        /* Define new color variables based on the provided image */
+        /* Define new color variables based on the provided image and user request */
         :root {
-            --color-primary: #70C655;       /* Lime Green from image for main accents */
-            --color-secondary: #8BC979;     /* Lighter green for hover/subtlety */
-            --color-background-dark: #3683A3; /* Teal/Blue from image for background */
-            --color-text-dark: #1A3644;     /* Darkened version of the background for contrast on white */
+            --color-primary: #1A3644;       /* NEW: Darkest Blue for main accents, buttons, and headings */
+            --color-secondary: #3683A3;     /* Teal/Blue background color, used for subtle button hover */
+            --color-background-dark: #3683A3; /* Teal/Blue from image for page background */
+            --color-text-dark: #1A3644;     /* Darkest Blue for body text inside the container */
             --color-text-subtle: #6c757d;   /* Muted grey remains for secondary text */
             --color-white: #FFFFFF;
         }
@@ -26,20 +26,19 @@
         /* 2. Body and Overall Background - Simpler, Darker, Richer */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Use the new teal/blue color */
             background: var(--color-background-dark);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: var(--color-white); /* Ensures main page elements are readable */
+            color: var(--color-white);
             position: relative;
             overflow: hidden;
             padding: 40px 20px;
         }
 
-        /* Subtle background texture remains, now adjusted for the new blue */
+        /* Subtle background texture */
         body::before {
             content: '';
             position: absolute;
@@ -55,7 +54,6 @@
 
         /* 3. Main Container - Clean White for Readability */
         .container {
-            /* Set a clean, near-solid white for max readability */
             background: rgba(255, 255, 255, 1);
             backdrop-filter: blur(10px);
             border-radius: 20px;
@@ -69,11 +67,11 @@
             width: 90%;
             position: relative;
             z-index: 1;
-            color: var(--color-text-dark); /* All text inside the container is dark for contrast */
+            color: var(--color-text-dark); /* All body text inside the container is dark blue */
         }
 
         .container::before {
-            content: none; /* Remove the inner gradient for a cleaner look */
+            content: none;
         }
 
         .logo {
@@ -93,10 +91,10 @@
             width: 100%;
         }
 
-        /* 8. Help Button - Uses the green accent color */
+        /* 8. Help Button - Uses the darkest blue */
         .help-button {
-            background: var(--color-primary);
-            color: var(--color-white);
+            background: var(--color-primary); /* Dark Blue */
+            color: var(--color-white); /* White Text */
             border: none;
             padding: 10px 20px;
             font-size: 0.95rem;
@@ -108,14 +106,14 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 4px 15px rgba(112, 198, 85, 0.4); /* Shadow matches new primary color */
+            box-shadow: 0 4px 15px rgba(26, 54, 68, 0.4); /* Shadow matches new primary color */
             margin-top: 20px;
         }
 
         .help-button:hover {
             background: var(--color-secondary);
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(112, 198, 85, 0.6);
+            box-shadow: 0 8px 20px rgba(26, 54, 68, 0.6);
         }
 
         .help-button:active {
@@ -127,7 +125,7 @@
             font-size: 2.2rem;
             margin-bottom: 0.75rem;
             font-weight: 700;
-            /* Use solid primary color (Green) */
+            /* Use solid darkest blue */
             color: var(--color-primary);
             -webkit-background-clip: unset;
             -webkit-text-fill-color: unset;
@@ -146,10 +144,10 @@
             margin-bottom: 2rem;
         }
 
-        /* 4. Primary Button Style - Vibrant & Active (Green) */
+        /* 4. Primary Button Style - Uses the darkest blue */
         .download-btn {
-            background: var(--color-primary); /* Solid primary color */
-            color: var(--color-white);
+            background: var(--color-primary); /* Dark Blue */
+            color: var(--color-white); /* White Text */
             border: none;
             padding: 1.25rem 3rem;
             font-size: 1.15rem;
@@ -159,7 +157,7 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
             display: inline-block;
-            box-shadow: 0 8px 20px rgba(112, 198, 85, 0.4); /* Shadow matches new primary color */
+            box-shadow: 0 8px 20px rgba(26, 54, 68, 0.4); /* Shadow matches new primary color */
             position: relative;
             overflow: hidden;
         }
@@ -184,16 +182,16 @@
 
         .download-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(112, 198, 85, 0.6);
+            box-shadow: 0 15px 35px rgba(26, 54, 68, 0.6);
         }
 
         .download-btn:active {
             transform: translateY(0);
         }
 
-        /* 6. Info Blocks (OS Info & Mobile Message) - Lighter and Cleaner */
+        /* 6. Info Blocks (OS Info & Mobile Message) - Updated colors */
         .mobile-message {
-            background: #ffe0b2; /* Warm, soft background for cautionary messages */
+            background: #ffe0b2;
             border-radius: 15px;
             padding: 1.5rem;
             margin-bottom: 2rem;
@@ -204,7 +202,7 @@
         .mobile-message h2 {
             font-size: 1.3rem;
             margin-bottom: 0.75rem;
-            color: #ff8c00; /* Warm, easily visible warning color */
+            color: #ff8c00;
             -webkit-background-clip: unset;
             -webkit-text-fill-color: unset;
             background-clip: unset;
@@ -217,21 +215,21 @@
         }
 
         .os-info {
-            background: #f0fff0; /* Very light green background */
+            background: #f1f7fe; /* Light blue background for info block */
             border-radius: 10px;
             padding: 1rem;
             margin-bottom: 2rem;
             font-size: 1rem;
-            color: var(--color-primary); /* Text color matches primary for cohesion */
+            color: var(--color-primary); /* Text color is dark blue */
             font-weight: 600;
-            border: 1px solid rgba(112, 198, 85, 0.2);
+            border: 1px solid rgba(26, 54, 68, 0.2); /* Border uses dark blue shade */
         }
 
-        /* 7. Other Downloads Section - Simplified and Cohesive */
+        /* 7. Other Downloads Section - Uses the darkest blue on hover */
         .other-downloads {
             margin-top: 2rem;
             padding-top: 1.5rem;
-            border-top: 1px solid #dee2e6; /* Clean, light separator */
+            border-top: 1px solid #dee2e6;
         }
 
         .other-downloads h3 {
@@ -249,7 +247,7 @@
         }
 
         .download-link {
-            background: #f8f9fa; /* Very light grey link background */
+            background: #f8f9fa;
             color: var(--color-text-dark);
             text-decoration: none;
             padding: 0.75rem 1.25rem;
@@ -257,14 +255,14 @@
             font-size: 0.9rem;
             font-weight: 500;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid #ced4da; /* Light border */
+            border: 1px solid #ced4da;
         }
 
         .download-link:hover {
-            background: var(--color-primary);
-            color: var(--color-white);
+            background: var(--color-primary); /* Dark Blue */
+            color: var(--color-white); /* White Text */
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(112, 198, 85, 0.3);
+            box-shadow: 0 5px 15px rgba(26, 54, 68, 0.3);
             border-color: var(--color-primary);
         }
 
@@ -282,10 +280,10 @@
         }
 
         .toggle-btn:hover {
-            background: var(--color-primary);
-            color: var(--color-white);
+            background: var(--color-primary); /* Dark Blue */
+            color: var(--color-white); /* White Text */
             border-color: var(--color-primary);
-            box-shadow: 0 4px 15px rgba(112, 198, 85, 0.3);
+            box-shadow: 0 4px 15px rgba(26, 54, 68, 0.3);
         }
 
         .hidden {
