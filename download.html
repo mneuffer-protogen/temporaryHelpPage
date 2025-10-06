@@ -14,14 +14,16 @@
 
     body {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #2F4F4F 0%, #1E3A8A 50%, #000000 100%);
+        background: linear-gradient(135deg, #2F4F4F 0%, #1E3A8A 50%, #2F4F4F 100%);
         min-height: 100vh;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         color: white;
         position: relative;
         overflow: hidden;
+        padding: 40px 20px;
     }
 
     body::before {
@@ -71,8 +73,17 @@
         width: 500px;
         max-width: 90%;
         height: auto;
-        margin-bottom: 20px;
+        margin-bottom: 30px;
         filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+        position: relative;
+        z-index: 1;
+    }
+
+    .page-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
     }
 
     .help-button {
@@ -290,12 +301,13 @@
 
 </head>
 <body>
-    <div class="container">
+    <div class="page-wrapper">
+        <img src="https://rawcdn.githack.com/mneuffer-protogen/temporaryHelpPage/2963deb8cb92c2c9dd488cb021ef5dfdc814a472/logo-KO-2500.png" alt="ProtoGen Logo" class="logo">
+        
+        <div class="container">
         <a href="https://mneuffer-protogen.github.io/temporaryHelpPage/" target="_blank" class="help-button">
             ❓ FAQ / Help
         </a>
-        
-        <img src="https://rawcdn.githack.com/mneuffer-protogen/temporaryHelpPage/2963deb8cb92c2c9dd488cb021ef5dfdc814a472/logo-KO-2500.png" alt="ProtoGen Logo" class="logo">
         
         <h1>Download ESAMTAC Virtual Training Lab</h1>
         <p class="subtitle">Get the latest version for your device</p>
@@ -317,6 +329,7 @@
                 <a href="#" class="download-link" onclick="downloadFile('mac-intel')">Mac (Intel)</a>
                 <a href="#" class="download-link" onclick="downloadFile('mac-silicon')">Mac (Apple Silicon)</a>
             </div>
+        </div>
         </div>
     </div>
 </div>
