@@ -13,20 +13,21 @@
             box-sizing: border-box;
         }
 
-        /* Define new color variables based on the provided image and user request */
+        /* Define color variables */
         :root {
-            --color-primary: #1A3644;       /* NEW: Darkest Blue for main accents, buttons, and headings */
-            --color-secondary: #3683A3;     /* Teal/Blue background color, used for subtle button hover */
-            --color-background-dark: #3683A3; /* Teal/Blue from image for page background */
+            --color-primary: #1A3644;       /* Darkest Blue/Text/Button */
+            --color-secondary: #3683A3;     /* Teal/Blue, used for subtle button hover */
+            --color-background-dark: #3683A3; /* Teal/Blue/Body Background */
             --color-text-dark: #1A3644;     /* Darkest Blue for body text inside the container */
             --color-text-subtle: #6c757d;   /* Muted grey remains for secondary text */
             --color-white: #FFFFFF;
         }
 
-        /* 2. Body and Overall Background - Simpler, Darker, Richer */
+        /* 2. Body and Overall Background - Gradient Applied */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--color-background-dark);
+            /* SLIGHT GRADIENT APPLIED */
+            background: linear-gradient(135deg, var(--color-background-dark) 0%, #20627d 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -52,22 +53,24 @@
             z-index: 0;
         }
 
-        /* 3. Main Container - Clean White for Readability */
+        /* 3. Main Container - FROSTED GLASS EFFECT */
         .container {
-            background: rgba(255, 255, 255, 1);
-            backdrop-filter: blur(10px);
+            /* Frosted Glass Look: Translucent background with heavy blur filter */
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px) saturate(180%);
             border-radius: 20px;
             padding: 3rem;
             text-align: center;
             box-shadow:
                 0 15px 30px rgba(0, 0, 0, 0.2),
                 0 1px 1px rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Light border for definition */
             max-width: 550px;
             width: 90%;
             position: relative;
             z-index: 1;
-            color: var(--color-text-dark); /* All body text inside the container is dark blue */
+            /* CRITICAL: Text inside the frosted box must be white for readability */
+            color: var(--color-white);
         }
 
         .container::before {
@@ -106,7 +109,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 4px 15px rgba(26, 54, 68, 0.4); /* Shadow matches new primary color */
+            box-shadow: 0 4px 15px rgba(26, 54, 68, 0.4);
             margin-top: 20px;
         }
 
@@ -125,8 +128,8 @@
             font-size: 2.2rem;
             margin-bottom: 0.75rem;
             font-weight: 700;
-            /* Use solid darkest blue */
-            color: var(--color-primary);
+            /* Changed to white for readability on frosted glass */
+            color: var(--color-white);
             -webkit-background-clip: unset;
             -webkit-text-fill-color: unset;
             background-clip: unset;
@@ -135,7 +138,8 @@
 
         .subtitle {
             font-size: 1.05rem;
-            color: var(--color-text-subtle);
+            /* Changed to soft white for readability on frosted glass */
+            color: rgba(255, 255, 255, 0.7);
             margin-bottom: 2rem;
             line-height: 1.5;
         }
@@ -157,7 +161,7 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
             display: inline-block;
-            box-shadow: 0 8px 20px rgba(26, 54, 68, 0.4); /* Shadow matches new primary color */
+            box-shadow: 0 8px 20px rgba(26, 54, 68, 0.4);
             position: relative;
             overflow: hidden;
         }
@@ -169,7 +173,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: var(--color-secondary); /* Use secondary color for hover effect */
+            background: var(--color-secondary);
             border-radius: 50px;
             opacity: 0;
             transition: opacity 0.3s ease;
@@ -222,20 +226,22 @@
             font-size: 1rem;
             color: var(--color-primary); /* Text color is dark blue */
             font-weight: 600;
-            border: 1px solid rgba(26, 54, 68, 0.2); /* Border uses dark blue shade */
+            border: 1px solid rgba(26, 54, 68, 0.2);
         }
 
         /* 7. Other Downloads Section - Uses the darkest blue on hover */
         .other-downloads {
             margin-top: 2rem;
             padding-top: 1.5rem;
-            border-top: 1px solid #dee2e6;
+            /* Changed separator to a soft white/light color to look better on frosted glass */
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .other-downloads h3 {
             font-size: 1.1rem;
             margin-bottom: 1rem;
-            color: var(--color-text-dark);
+            /* Changed to white for readability on frosted glass */
+            color: var(--color-white);
             font-weight: 600;
         }
 
@@ -248,7 +254,7 @@
 
         .download-link {
             background: #f8f9fa;
-            color: var(--color-text-dark);
+            color: var(--color-text-dark); /* Dark Text on Light Link Background */
             text-decoration: none;
             padding: 0.75rem 1.25rem;
             border-radius: 25px;
@@ -260,7 +266,7 @@
 
         .download-link:hover {
             background: var(--color-primary); /* Dark Blue */
-            color: var(--color-white); /* White Text */
+            color: var(--color-white); /* White Text on Dark Button Background */
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(26, 54, 68, 0.3);
             border-color: var(--color-primary);
