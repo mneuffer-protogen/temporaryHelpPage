@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -67,7 +66,7 @@
             width: 90%;
             position: relative;
             z-index: 1;
-            color: var(--color-text-dark); /* All body text inside the container is dark blue */
+            color: var(--color-text-dark);
         }
 
         .container::before {
@@ -93,8 +92,8 @@
 
         /* 8. Help Button - Uses the darkest blue */
         .help-button {
-            background: var(--color-primary); /* Dark Blue */
-            color: var(--color-white); /* White Text */
+            background: var(--color-primary);
+            color: var(--color-white);
             border: none;
             padding: 10px 20px;
             font-size: 0.95rem;
@@ -106,7 +105,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 4px 15px rgba(26, 54, 68, 0.4); /* Shadow matches new primary color */
+            box-shadow: 0 4px 15px rgba(26, 54, 68, 0.4);
             margin-top: 20px;
         }
 
@@ -125,7 +124,6 @@
             font-size: 2.2rem;
             margin-bottom: 0.75rem;
             font-weight: 700;
-            /* Use solid darkest blue */
             color: var(--color-primary);
             -webkit-background-clip: unset;
             -webkit-text-fill-color: unset;
@@ -146,8 +144,8 @@
 
         /* 4. Primary Button Style - Uses the darkest blue */
         .download-btn {
-            background: var(--color-primary); /* Dark Blue */
-            color: var(--color-white); /* White Text */
+            background: var(--color-primary);
+            color: var(--color-white);
             border: none;
             padding: 1.25rem 3rem;
             font-size: 1.15rem;
@@ -157,7 +155,7 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
             display: inline-block;
-            box-shadow: 0 8px 20px rgba(26, 54, 68, 0.4); /* Shadow matches new primary color */
+            box-shadow: 0 8px 20px rgba(26, 54, 68, 0.4);
             position: relative;
             overflow: hidden;
         }
@@ -169,7 +167,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: var(--color-secondary); /* Use secondary color for hover effect */
+            background: var(--color-secondary);
             border-radius: 50px;
             opacity: 0;
             transition: opacity 0.3s ease;
@@ -215,14 +213,14 @@
         }
 
         .os-info {
-            background: #f1f7fe; /* Light blue background for info block */
+            background: #f1f7fe;
             border-radius: 10px;
             padding: 1rem;
             margin-bottom: 2rem;
             font-size: 1rem;
-            color: var(--color-primary); /* Text color is dark blue */
+            color: var(--color-primary);
             font-weight: 600;
-            border: 1px solid rgba(26, 54, 68, 0.2); /* Border uses dark blue shade */
+            border: 1px solid rgba(26, 54, 68, 0.2);
         }
 
         /* 7. Other Downloads Section - Uses the darkest blue on hover */
@@ -259,8 +257,8 @@
         }
 
         .download-link:hover {
-            background: var(--color-primary); /* Dark Blue */
-            color: var(--color-white); /* White Text */
+            background: var(--color-primary);
+            color: var(--color-white);
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(26, 54, 68, 0.3);
             border-color: var(--color-primary);
@@ -280,8 +278,8 @@
         }
 
         .toggle-btn:hover {
-            background: var(--color-primary); /* Dark Blue */
-            color: var(--color-white); /* White Text */
+            background: var(--color-primary);
+            color: var(--color-white);
             border-color: var(--color-primary);
             box-shadow: 0 4px 15px rgba(26, 54, 68, 0.3);
         }
@@ -316,159 +314,160 @@
             }
         }
     </style>
-
 </head>
 <body>
     <div class="page-wrapper">
         <img src="https://rawcdn.githack.com/mneuffer-protogen/temporaryHelpPage/2963deb8cb92c2c9dd488cb021ef5dfdc814a472/logo-KO-2500.png" alt="ProtoGen Logo" class="logo">
 
         <div class="container">
+            <h1>Download ESAMTAC Virtual Training Lab</h1>
+            <p class="subtitle">Get the latest version for your device</p>
 
-        <h1>Download ESAMTAC Virtual Training Lab</h1>
-        <p class="subtitle">Get the latest version for your device</p>
+            <div class="os-info" id="osInfo"></div>
 
-    <div class="os-info" id="osInfo"></div>
+            <div class="download-section" id="downloadSection"></div>
 
-    <div class="download-section" id="downloadSection">
-        </div>
-
-    <div class="other-downloads">
-        <button class="toggle-btn" id="toggleBtn" onclick="toggleOtherDownloads()">
-            Show Other Downloads
-        </button>
-        <div id="otherDownloads" class="hidden">
-            <h3>All Download Options</h3>
-            <div class="download-links">
-                <a href="#" class="download-link" onclick="downloadFile('windows')">Windows (x64)</a>
-                <a href="#" class="download-link" onclick="downloadFile('mac-intel')">Mac (Intel)</a>
-                <a href="#" class="download-link" onclick="downloadFile('mac-silicon')">Mac (Apple Silicon)</a>
-            </div>
+            <div class="other-downloads">
+                <button class="toggle-btn" id="toggleBtn" onclick="toggleOtherDownloads()">
+                    Show Other Downloads
+                </button>
+                <div id="otherDownloads" class="hidden">
+                    <h3>All Download Options</h3>
+                    <div class="download-links">
+                        <a href="#" class="download-link" onclick="downloadFile('windows'); return false;">Windows (x64)</a>
+                        <a href="#" class="download-link" onclick="downloadFile('mac-intel'); return false;">Mac (Intel)</a>
+                        <a href="#" class="download-link" onclick="downloadFile('mac-silicon'); return false;">Mac (Apple Silicon)</a>
                     </div>
+                </div>
+            </div>
+
+            <a href="https://mneuffer-protogen.github.io/temporaryHelpPage/" target="_blank" class="help-button">
+                FAQ / Help
+            </a>
         </div>
-
-        <a href="https://mneuffer-protogen.github.io/temporaryHelpPage/" target="_blank" class="help-button">
-            FAQ / Help
-        </a>
     </div>
-</div>
 
-<script>
-    // OS Detection
-    function detectOS() {
-        const userAgent = navigator.userAgent;
-        const platform = navigator.platform;
+    <script>
+        // OS Detection
+        function detectOS() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            const platform = navigator.platform.toLowerCase();
 
-        // Mobile detection
-        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)) {
-            return 'mobile';
+            // Mobile detection (check first as mobile can report various platforms)
+            if (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent)) {
+                return 'mobile';
+            }
+
+            // Windows detection
+            if (platform.includes('win') || userAgent.includes('windows')) {
+                return 'windows';
+            }
+
+            // Mac detection with Apple Silicon check
+            if (platform.includes('mac') || userAgent.includes('macintosh')) {
+                // Detect Apple Silicon using multiple methods
+                const hasAppleSilicon = 
+                    userAgent.includes('mac os x') && navigator.maxTouchPoints > 1 ||
+                    /mac.*arm/i.test(userAgent);
+                
+                return hasAppleSilicon ? 'mac-silicon' : 'mac-intel';
+            }
+
+            // Linux detection
+            if (platform.includes('linux') || userAgent.includes('linux')) {
+                return 'linux';
+            }
+
+            return 'unknown';
         }
 
-        // Windows detection
-        if (platform.indexOf('Win') !== -1) {
-            return 'windows';
+        // Download function
+        function downloadFile(osType) {
+            const downloads = {
+                'windows': 'https://github.com/protogen-org/ESAMTAC-VR/releases/download/10%2F8%2F25/ESAMTAC_Installer.exe',
+                'mac-intel': 'https://example.com/download/mac-intel/app-intel.dmg',
+                'mac-silicon': 'https://example.com/download/mac-silicon/app-silicon.dmg',
+            };
+
+            // For Windows, directly open the GitHub release link
+            if (osType === 'windows') {
+                window.open(downloads[osType], '_blank');
+            } else {
+                // For other platforms, show placeholder message
+                alert(`Download for ${osType} coming soon!\nURL: ${downloads[osType]}`);
+            }
         }
 
-        // Mac detection with Apple Silicon check
-        if (platform.indexOf('Mac') !== -1) {
-            // Try to detect Apple Silicon
-            // This is a bit tricky, but we can use some heuristics
-            const hasAppleSilicon = /Mac.*ARM|Mac.*Apple/i.test(userAgent) ||
-                                   navigator.maxTouchPoints > 1 ||
-                                   screen.width === 1440 && screen.height === 900; // Common M1 MacBook resolution
+        // Toggle other downloads visibility
+        function toggleOtherDownloads() {
+            const otherDownloads = document.getElementById('otherDownloads');
+            const toggleBtn = document.getElementById('toggleBtn');
 
-            return hasAppleSilicon ? 'mac-silicon' : 'mac-intel';
+            if (otherDownloads.classList.contains('hidden')) {
+                otherDownloads.classList.remove('hidden');
+                toggleBtn.textContent = 'Hide Other Downloads';
+            } else {
+                otherDownloads.classList.add('hidden');
+                toggleBtn.textContent = 'Show Other Downloads';
+            }
         }
 
-        return 'unknown';
-    }
+        // Initialize page
+        function initializePage() {
+            const os = detectOS();
+            const osInfo = document.getElementById('osInfo');
+            const downloadSection = document.getElementById('downloadSection');
 
-    // Download function
-    function downloadFile(osType) {
-        const downloads = {
-            'windows': 'https://github.com/protogen-org/ESAMTAC-VR/releases/download/10%2F8%2F25/ESAMTAC_Installer.exe',
-            'mac-intel': 'https://example.com/download/mac-intel/app-intel.dmg',
-            'mac-silicon': 'https://example.com/download/mac-silicon/app-silicon.dmg',
-        };
+            // Display OS info
+            const osNames = {
+                'windows': 'Windows',
+                'mac-intel': 'macOS (Intel)',
+                'mac-silicon': 'macOS (Apple Silicon)',
+                'mobile': 'Mobile Device',
+                'linux': 'Linux',
+                'unknown': 'Unknown OS'
+            };
 
-        // For Windows, directly open the GitHub release link
-        if (osType === 'windows') {
-            window.open(downloads[osType], '_blank');
-        } else {
-            // For other platforms, show placeholder message
-            alert(`Download for ${osType} coming soon!\nURL: ${downloads[osType]}`);
+            osInfo.textContent = `Detected: ${osNames[os]}`;
+
+            // Create appropriate download section
+            if (os === 'mobile') {
+                downloadSection.innerHTML = `
+                    <div class="mobile-message">
+                        <h2>Mobile Device Detected</h2>
+                        <p>Please visit this page on a computer to download the desktop application.</p>
+                    </div>
+                `;
+            } else if (os === 'windows') {
+                downloadSection.innerHTML = `
+                    <button class="download-btn" onclick="downloadFile('windows')">
+                        Download for Windows
+                    </button>
+                `;
+            } else if (os === 'mac-intel') {
+                downloadSection.innerHTML = `
+                    <button class="download-btn" onclick="downloadFile('mac-intel')">
+                        Download for Mac (Intel)
+                    </button>
+                `;
+            } else if (os === 'mac-silicon') {
+                downloadSection.innerHTML = `
+                    <button class="download-btn" onclick="downloadFile('mac-silicon')">
+                        Download for Mac (Apple Silicon)
+                    </button>
+                `;
+            } else {
+                downloadSection.innerHTML = `
+                    <div class="mobile-message">
+                        <h2>Unknown Operating System</h2>
+                        <p>We couldn't detect your operating system. Please select from the options below.</p>
+                    </div>
+                `;
+            }
         }
-    }
 
-    // Toggle other downloads visibility
-    function toggleOtherDownloads() {
-        const otherDownloads = document.getElementById('otherDownloads');
-        const toggleBtn = document.getElementById('toggleBtn');
-
-        if (otherDownloads.classList.contains('hidden')) {
-            otherDownloads.classList.remove('hidden');
-            toggleBtn.textContent = 'Hide Other Downloads';
-        } else {
-            otherDownloads.classList.add('hidden');
-            toggleBtn.textContent = 'Show Other Downloads';
-        }
-    }
-
-    // Initialize page
-    function initializePage() {
-        const os = detectOS();
-        const osInfo = document.getElementById('osInfo');
-        const downloadSection = document.getElementById('downloadSection');
-
-        // Display OS info
-        const osNames = {
-            '': 'Windows',
-            'mac-intel': 'macOS (Intel)',
-            'mac-silicon': 'macOS (Apple Silicon)',
-            'mobile': 'Mobile Device',
-            'unknown': 'Unknown OS'
-        };
-
-        osInfo.textContent = `Detected: ${osNames[os]}`;
-
-        // Create appropriate download section
-        if (os === 'mobile') {
-            downloadSection.innerHTML = `
-                <div class="mobile-message">
-                    <h2>Mobile Device Detected</h2>
-                    <p>Please visit this page on a computer to download the desktop application.</p>
-                </div>
-            `;
-        } else if (os === 'windows') {
-            downloadSection.innerHTML = `
-                <button class="download-btn" onclick="downloadFile('windows')">
-                    Download for Windows
-                </button>
-            `;
-        } else if (os === 'mac-intel') {
-            downloadSection.innerHTML = `
-                <button class="download-btn" onclick="downloadFile('mac-intel')">
-                    Download for Mac (Intel)
-                </button>
-            `;
-        } else if (os === 'mac-silicon') {
-            downloadSection.innerHTML = `
-                <button class="download-btn" onclick="downloadFile('mac-silicon')">
-                    Download for Mac (Apple Silicon)
-                </button>
-            `;
-        } else {
-            downloadSection.innerHTML = `
-                <div class="mobile-message">
-                    <h2>Unknown Operating System</h2>
-                    <p>We couldn't detect your operating system. Please select from the options below.</p>
-                </div>
-            `;
-        }
-    }
-
-    // Initialize when page loads
-    document.addEventListener('DOMContentLoaded', initializePage);
-</script>
-
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
 </body>
 </html>
