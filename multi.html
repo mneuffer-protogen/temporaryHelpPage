@@ -2,290 +2,323 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Battery Rack Multimeter Sim</title>
+    <title>Detailed 24-Terminal Battery Sim</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #1e1e1e;
-            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             height: 100vh;
             margin: 0;
             overflow: hidden;
+            user-select: none;
         }
 
-        h2 { margin-bottom: 10px; color: #ccc; }
-        .instructions { color: #888; margin-bottom: 30px; font-size: 0.9em; }
+        h3 { margin-top: 15px; color: #aaa; }
+        .hint { font-size: 0.8em; color: #666; margin-bottom: 20px; }
 
-        /* --- RACK CONTAINER --- */
-        .rack-container {
+        /* --- RACK LAYOUT --- */
+        .rack {
             display: flex;
-            gap: 10px;
-            padding: 20px;
-            background: #2a2a2a;
+            gap: 20px;
+            padding: 30px;
+            background: #1e1e1e;
             border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            position: relative;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
         }
 
-        /* --- BATTERY STYLING --- */
-        .battery {
-            width: 120px;
-            height: 160px;
-            background: linear-gradient(to bottom, #0055aa 40%, #ddd 40%);
+        /* --- BATTERY BLOCK (Contains 3 Cells) --- */
+        .battery-block {
+            width: 140px;
+            height: 180px;
+            background: linear-gradient(to bottom, #0055aa 50px, #ddd 50px);
             border-radius: 4px;
             position: relative;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.6);
             display: flex;
-            justify-content: space-around;
+            justify-content: space-evenly;
             padding-top: 10px;
+            border: 1px solid #333;
         }
 
-        .battery::after {
-            content: attr(data-label);
+        .battery-block::after {
+            content: attr(data-name);
             position: absolute;
             bottom: 10px;
-            left: 0; 
             width: 100%;
             text-align: center;
             color: #333;
             font-weight: bold;
         }
 
-        /* --- TERMINALS (NODES) --- */
-        .terminal {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: #444;
-            border: 2px solid #777;
+        /* --- INDIVIDUAL CELL (Visual grouping) --- */
+        .cell-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 33%;
             position: relative;
+        }
+        
+        /* Yellow Vent Cap */
+        .vent-cap {
+            width: 20px; height: 20px;
+            background: #eebb00; /* Yellow cap */
+            border-radius: 50%;
+            margin-bottom: 5px;
+            box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            border: 1px solid #bba000;
+        }
+
+        /* --- TERMINALS --- */
+        .terminal {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #555;
+            margin: 2px 0;
             cursor: crosshair;
             transition: transform 0.1s;
+            position: relative;
             z-index: 10;
         }
 
-        .terminal.pos { background: #cc0000; border-color: #ff4444; }
-        .terminal.neg { background: #111; border-color: #555; }
-        
-        .terminal:hover { transform: scale(1.2); border-color: white; }
+        .terminal:hover { transform: scale(1.3); border-color: #fff; }
+        .terminal.pos { background: #d32f2f; border-color: #ff6666; }
+        .terminal.neg { background: #212121; border-color: #666; }
 
-        /* Visual Jumpers (Decoration) */
-        .jumper {
+        /* --- JUMPERS (Visual Straps) --- */
+        .strap-internal {
             position: absolute;
-            height: 12px;
+            height: 8px;
             background: #888;
             border: 1px solid #555;
             z-index: 5;
-            top: 20px;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+            top: 45px; /* Aligns with terminals */
+            transform-origin: left center;
+        }
+        
+        .cable-external {
+            position: absolute;
+            height: 8px; /* Thicker cable */
+            background: #222; /* Black cable insulation */
+            border: 1px solid #000;
+            z-index: 6;
+            top: 35px; /* Loops higher */
+            border-radius: 4px;
         }
 
         /* --- MULTIMETER --- */
-        .multimeter {
-            margin-top: 40px;
-            width: 250px;
-            background: #e6b800; /* Fluke Yellow */
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.6);
-            position: relative;
+        .multimeter-case {
+            width: 220px;
+            background: #fbc02d;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
             display: flex;
             flex-direction: column;
             align-items: center;
             border: 4px solid #333;
         }
 
-        .screen {
+        .lcd-screen {
             width: 90%;
-            height: 60px;
-            background: #9ea792;
-            border: 2px solid #555;
-            border-radius: 4px;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 32px;
+            height: 50px;
+            background: #aabba0;
+            font-family: 'Courier New', monospace;
+            font-size: 28px;
             color: #111;
             display: flex;
             align-items: center;
             justify-content: flex-end;
             padding-right: 10px;
-            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2);
+            border: 2px solid #555;
+            border-radius: 4px;
             margin-bottom: 20px;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2);
         }
 
-        /* --- PROBES --- */
-        .probe-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            width: 100%;
-        }
-
+        /* --- DRAGGABLE PROBES --- */
         .probe {
-            width: 20px;
-            height: 100px;
-            position: absolute; /* Allows dragging */
+            position: absolute;
+            width: 14px;
+            height: 80px;
             cursor: grab;
             z-index: 1000;
             display: flex;
             flex-direction: column;
             align-items: center;
-            filter: drop-shadow(5px 5px 5px rgba(0,0,0,0.5));
+            filter: drop-shadow(3px 3px 3px rgba(0,0,0,0.5));
         }
-
         .probe:active { cursor: grabbing; }
 
-        .probe-tip {
-            width: 4px;
-            height: 30px;
-            background: silver;
-            border-radius: 2px;
-        }
+        .probe-tip { width: 4px; height: 25px; background: silver; border-radius: 1px; }
+        .probe-body { width: 14px; height: 55px; border-radius: 3px; }
+        
+        .probe.red .probe-body { background: #d32f2f; }
+        .probe.black .probe-body { background: #212121; }
 
-        .probe-handle {
-            width: 18px;
-            height: 70px;
-            border-radius: 4px;
-        }
-
-        .probe-red .probe-handle { background: #cc0000; }
-        .probe-black .probe-handle { background: #111; }
-
-        /* Wire simulation (SVG lines) */
-        svg {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 999;
-        }
+        /* Wires SVG */
+        svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 900; }
     </style>
 </head>
 <body>
 
-    <h2>Series Battery Rack Simulation</h2>
-    <div class="instructions">Drag the probes to terminals. Readings are based on Node Potential relative to Ground (Bat 4 Neg).</div>
+    <h3>UE5 Battery Sim Logic Check</h3>
+    <div class="hint">12 Cells Total (4 Blocks x 3 Cells). Measure across any 2 points.</div>
 
-    <div class="rack-container" id="rack">
-        <div class="jumper" style="left: 105px; width: 50px;"></div>
-        <div class="jumper" style="left: 235px; width: 50px;"></div>
-        <div class="jumper" style="left: 365px; width: 50px;"></div>
-
-        <div class="battery" data-label="Bat 1">
-            <div class="terminal pos" data-potential="24.60" title="System Pos (+)"></div>
-            <div class="terminal neg" data-potential="18.45" title="Bat 1 Neg"></div>
+    <div class="rack" id="rackContainer">
         </div>
 
-        <div class="battery" data-label="Bat 2">
-            <div class="terminal pos" data-potential="18.45" title="Bat 2 Pos"></div>
-            <div class="terminal neg" data-potential="12.30" title="Bat 2 Neg"></div>
-        </div>
-
-        <div class="battery" data-label="Bat 3">
-            <div class="terminal pos" data-potential="12.30" title="Bat 3 Pos"></div>
-            <div class="terminal neg" data-potential="6.15" title="Bat 3 Neg"></div>
-        </div>
-
-        <div class="battery" data-label="Bat 4">
-            <div class="terminal pos" data-potential="6.15" title="Bat 4 Pos"></div>
-            <div class="terminal neg" data-potential="0.00" title="System Gnd (-)"></div>
-        </div>
+    <div class="multimeter-case" id="meter">
+        <div class="lcd-screen" id="display">0.00 V</div>
     </div>
 
-    <div class="multimeter">
-        <div class="screen" id="display">0.00 V</div>
-        <div class="probe-home" style="height: 100px; width: 100%;">
-            </div>
+    <div id="probeRed" class="probe red" style="top: 500px; left: calc(50% + 40px);">
+        <div class="probe-tip"></div><div class="probe-body"></div>
     </div>
-
-    <div id="probe-red" class="probe probe-red" style="top: 450px; left: calc(50% + 20px);">
-        <div class="probe-tip"></div>
-        <div class="probe-handle"></div>
-    </div>
-
-    <div id="probe-black" class="probe probe-black" style="top: 450px; left: calc(50% - 40px);">
-        <div class="probe-tip"></div>
-        <div class="probe-handle"></div>
+    <div id="probeBlack" class="probe black" style="top: 500px; left: calc(50% - 40px);">
+        <div class="probe-tip"></div><div class="probe-body"></div>
     </div>
 
     <svg>
-        <line id="wire-red" x1="0" y1="0" x2="0" y2="0" stroke="#cc0000" stroke-width="3" />
-        <line id="wire-black" x1="0" y1="0" x2="0" y2="0" stroke="#333" stroke-width="3" />
+        <path id="wireRed" stroke="#d32f2f" stroke-width="3" fill="none" />
+        <path id="wireBlack" stroke="#333" stroke-width="3" fill="none" />
     </svg>
 
     <script>
-        // State
-        const probes = {
-            red: { el: document.getElementById('probe-red'), x: 0, y: 0, potential: null },
-            black: { el: document.getElementById('probe-black'), x: 0, y: 0, potential: null }
-        };
-        
-        const display = document.getElementById('display');
-        const wireRed = document.getElementById('wire-red');
-        const wireBlack = document.getElementById('wire-black');
-        const meterRect = document.querySelector('.multimeter').getBoundingClientRect();
-        
-        // Meter anchor points for wires (bottom of the multimeter)
-        const meterAnchors = {
-            red: { x: meterRect.left + 180, y: meterRect.bottom - 20 },
-            black: { x: meterRect.left + 70, y: meterRect.bottom - 20 }
-        };
+        // --- CONFIGURATION ---
+        // 4 Batteries, 3 Cells each.
+        // Voltage per cell (Healthy state)
+        const CELL_VOLTAGE = 2.05; 
+        const NUM_BATTERIES = 4;
+        const CELLS_PER_BATTERY = 3;
 
-        // Initialize Probes
-        let activeProbe = null;
-        let offset = { x: 0, y: 0 };
+        // We build the rack from RIGHT (0V) to LEFT (Max Voltage) visually 
+        // to match typical "Series String" diagrams, or Left-to-Right.
+        // Let's do Left-to-Right = High-to-Low for this visual.
+        // Actually, standard rack wiring zigs zags. Let's do a simple linear series.
+        // Bat 1 (Left) is most positive. Bat 4 (Right) is Ground.
 
-        function init() {
-            // Set initial wire positions
-            updateWires();
+        const rackEl = document.getElementById('rackContainer');
+        const terminals = []; // Store references for collision
+
+        function buildRack() {
+            // Total voltage starts high and drops as we go right
+            // Or starts 0 at right and goes up. Let's calculate Potentials.
             
-            // Add listeners
-            addDragLogic(probes.red.el, 'red');
-            addDragLogic(probes.black.el, 'black');
-        }
+            // We have 12 cells total. 
+            // Cell 0 (Far Right, Bat 4) -> Neg=0V, Pos=2.05V
+            // Cell 11 (Far Left, Bat 1) -> Neg=22.55V, Pos=24.6V
 
-        function addDragLogic(element, type) {
-            element.addEventListener('mousedown', startDrag);
-            element.addEventListener('touchstart', startDrag, {passive: false});
+            let globalCellIndex = 0; // 0 to 11
 
-            function startDrag(e) {
-                e.preventDefault();
-                activeProbe = type;
+            // Loop Batteries (Reverse order visually so Bat 1 is Left)
+            for (let b = NUM_BATTERIES - 1; b >= 0; b--) {
+                const batDiv = document.createElement('div');
+                batDiv.className = 'battery-block';
+                batDiv.setAttribute('data-name', `Bat ${b+1}`);
                 
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                // Inside each battery, 3 cells.
+                // If it's a standard block, terminals are usually arranged:
+                // Pos [Cell 3] Neg -- Pos [Cell 2] Neg -- Pos [Cell 1] Neg
+                // Let's model them simply side-by-side.
                 
-                const rect = element.getBoundingClientRect();
-                offset.x = clientX - rect.left;
-                offset.y = clientY - rect.top;
+                for (let c = CELLS_PER_BATTERY - 1; c >= 0; c--) {
+                    // Calculate Global Cell ID (0 is system ground cell)
+                    // If b=0 (Bat1), c=2 -> This is the highest cell
+                    let absoluteCellID = (b * CELLS_PER_BATTERY) + c;
+                    
+                    // Potentials for this specific cell
+                    let negPot = absoluteCellID * CELL_VOLTAGE;
+                    let posPot = (absoluteCellID + 1) * CELL_VOLTAGE;
 
-                document.addEventListener('mousemove', drag);
-                document.addEventListener('touchmove', drag, {passive: false});
-                document.addEventListener('mouseup', endDrag);
-                document.addEventListener('touchend', endDrag);
+                    const cellGroup = document.createElement('div');
+                    cellGroup.className = 'cell-group';
+
+                    // Vent Cap
+                    const cap = document.createElement('div');
+                    cap.className = 'vent-cap';
+
+                    // Positive Terminal
+                    const termPos = document.createElement('div');
+                    termPos.className = 'terminal pos';
+                    termPos.dataset.potential = posPot.toFixed(2);
+                    termPos.title = `Cell ${absoluteCellID+1} Pos: ${posPot.toFixed(2)}V`;
+
+                    // Negative Terminal
+                    const termNeg = document.createElement('div');
+                    termNeg.className = 'terminal neg';
+                    termNeg.dataset.potential = negPot.toFixed(2);
+                    termNeg.title = `Cell ${absoluteCellID+1} Neg: ${negPot.toFixed(2)}V`;
+
+                    cellGroup.appendChild(cap);
+                    cellGroup.appendChild(termPos);
+                    cellGroup.appendChild(termNeg);
+                    batDiv.appendChild(cellGroup);
+
+                    // Add visual straps? 
+                    // We need to connect THIS Neg to PREVIOUS Pos visually.
+                    // This logic is tricky in DOM, simpler to just calculate potentials correctly.
+                    // The "jumpers" are implied by the math: 
+                    // Bat 4 Cell 2 Neg (2.05V) is same potential as Bat 4 Cell 1 Pos (2.05V).
+                    // In simulation, touching either gives same result.
+                }
+                rackEl.appendChild(batDiv);
             }
         }
 
-        function drag(e) {
-            if (!activeProbe) return;
-            e.preventDefault();
+        buildRack();
 
+        // --- INTERACTION LOGIC (Same as before, updated for accurate potentials) ---
+        const probeRed = { el: document.getElementById('probeRed'), x: 0, y: 0, val: null };
+        const probeBlack = { el: document.getElementById('probeBlack'), x: 0, y: 0, val: null };
+        const display = document.getElementById('display');
+        const wireRed = document.getElementById('wireRed');
+        const wireBlack = document.getElementById('wireBlack');
+        const meterRect = document.getElementById('meter').getBoundingClientRect();
+
+        let activeProbe = null;
+        let offset = {x:0, y:0};
+
+        // Initialize drag
+        [probeRed, probeBlack].forEach(p => {
+            p.el.addEventListener('mousedown', (e) => startDrag(e, p));
+            p.el.addEventListener('touchstart', (e) => startDrag(e, p), {passive:false});
+        });
+
+        function startDrag(e, probeObj) {
+            e.preventDefault();
+            activeProbe = probeObj;
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            const rect = probeObj.el.getBoundingClientRect();
+            offset.x = clientX - rect.left;
+            offset.y = clientY - rect.top;
+            
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('touchmove', drag, {passive:false});
+            document.addEventListener('mouseup', endDrag);
+            document.addEventListener('touchend', endDrag);
+        }
 
+        function drag(e) {
+            if(!activeProbe) return;
+            e.preventDefault();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            
             const x = clientX - offset.x;
             const y = clientY - offset.y;
-
-            const el = probes[activeProbe].el;
-            el.style.left = x + 'px';
-            el.style.top = y + 'px';
-
-            // Check for collision with terminals
-            checkConnection(activeProbe, x, y);
+            
+            activeProbe.el.style.left = x + 'px';
+            activeProbe.el.style.top = y + 'px';
+            
+            checkCollision(activeProbe);
             updateWires();
         }
 
@@ -297,83 +330,66 @@
             activeProbe = null;
         }
 
-        function checkConnection(type, x, y) {
-            // Probe tip is at the bottom-center of the dragged element logic 
-            // visually top of div is top of tip. Wait, in CSS tip is top child.
-            // Let's get the absolute position of the "tip" element
-            const probeEl = probes[type].el;
-            const tipRect = probeEl.querySelector('.probe-tip').getBoundingClientRect();
+        function checkCollision(probeObj) {
+            // Hotspot is bottom-center of tip
+            const rect = probeObj.el.getBoundingClientRect();
+            const tipX = rect.left + rect.width/2;
+            const tipY = rect.bottom; 
+
+            // Find intersecting terminal
+            const allTerms = document.querySelectorAll('.terminal');
+            let hit = false;
             
-            // "Hotspot" is the center of the tip
-            const tipX = tipRect.left + tipRect.width / 2;
-            const tipY = tipRect.top + tipRect.height / 2;
-
-            const terminals = document.querySelectorAll('.terminal');
-            let connected = false;
-
-            terminals.forEach(term => {
-                const rect = term.getBoundingClientRect();
-                // Simple collision detection (if tip is inside terminal box)
-                if (tipX >= rect.left && tipX <= rect.right &&
-                    tipY >= rect.top && tipY <= rect.bottom) {
+            allTerms.forEach(term => {
+                const tRect = term.getBoundingClientRect();
+                if(tipX >= tRect.left && tipX <= tRect.right &&
+                   tipY >= tRect.top && tipY <= tRect.bottom) {
                     
-                    probes[type].potential = parseFloat(term.getAttribute('data-potential'));
-                    connected = true;
-                    
-                    // Visual feedback
-                    term.style.borderColor = "#fff";
-                    term.style.boxShadow = "0 0 10px white";
+                    probeObj.val = parseFloat(term.dataset.potential);
+                    term.style.borderColor = "white";
+                    hit = true;
                 } else {
-                    // Reset style
-                    if(term.classList.contains('pos')) {
-                        term.style.borderColor = "#ff4444";
-                    } else {
-                        term.style.borderColor = "#555";
-                    }
-                    term.style.boxShadow = "none";
+                    // Reset color
+                    if(term.classList.contains('pos')) term.style.borderColor = "#ff6666";
+                    else term.style.borderColor = "#666";
                 }
             });
 
-            if (!connected) {
-                probes[type].potential = null;
-            }
-
+            if(!hit) probeObj.val = null;
             updateDisplay();
         }
 
         function updateDisplay() {
-            const pRed = probes.red.potential;
-            const pBlack = probes.black.potential;
-
-            if (pRed !== null && pBlack !== null) {
-                let val = pRed - pBlack;
-                // Format to 2 decimals
-                display.innerText = val.toFixed(2) + " V";
+            if(probeRed.val !== null && probeBlack.val !== null) {
+                let v = probeRed.val - probeBlack.val;
+                // Add tiny random noise for realism?
+                // v += (Math.random() * 0.02); 
+                display.innerText = v.toFixed(2) + " V";
             } else {
                 display.innerText = "0.00 V";
             }
         }
 
         function updateWires() {
-            // Draw line from meter anchor to probe handle bottom
-            drawWire(probes.red.el, meterAnchors.red, wireRed);
-            drawWire(probes.black.el, meterAnchors.black, wireBlack);
+            // Draw curved SVG path from meter to probe handle
+            drawPath(probeRed.el, meterRect.left + 160, meterRect.bottom - 10, wireRed);
+            drawPath(probeBlack.el, meterRect.left + 60, meterRect.bottom - 10, wireBlack);
         }
 
-        function drawWire(probeEl, anchor, lineEl) {
-            const rect = probeEl.getBoundingClientRect();
-            // Connect to bottom of handle
-            const x2 = rect.left + rect.width / 2;
-            const y2 = rect.bottom - 10; 
-
-            lineEl.setAttribute('x1', anchor.x);
-            lineEl.setAttribute('y1', anchor.y);
-            lineEl.setAttribute('x2', x2);
-            lineEl.setAttribute('y2', y2);
+        function drawPath(probeEl, startX, startY, pathEl) {
+            const r = probeEl.getBoundingClientRect();
+            const endX = r.left + r.width/2;
+            const endY = r.top + 50; // Connect to handle bottom
+            
+            // Bezier curve
+            const cY = Math.max(startY, endY) + 50; // Control point drops down
+            
+            const d = `M ${startX} ${startY} Q ${(startX+endX)/2} ${cY} ${endX} ${endY}`;
+            pathEl.setAttribute('d', d);
         }
 
-        // Run init
-        init();
+        // Init wires
+        updateWires();
 
     </script>
 </body>
